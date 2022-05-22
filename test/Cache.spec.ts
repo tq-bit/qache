@@ -57,7 +57,7 @@ describe('Cache class', () => {
   it('Should delete a value for a unique key', () => {
     const cache = new Cache(options);
     cache.set(urlUserOne, { ...payloadUserOne });
-    cache.delete(urlUserOne);
+    cache.del(urlUserOne);
     expect(() => cache.get(urlUserOne)).to.throw();
   });
 
@@ -97,9 +97,7 @@ describe('Cache class', () => {
     const cache = new Cache(options);
     cache.set(urlUserOne, { ...payloadUserOne });
     cache.set(urlUsers, [...payloadUsers]);
-    console.log(cache.get(urlUsers));
-    cache.delete(urlUserOne);
-    console.log(cache.get(urlUsers));
+    cache.del(urlUserOne);
     expect(cache.get(urlUsers)).to.not.deep.include(payloadUserOne);
   });
 });

@@ -77,7 +77,7 @@ export default class Cache<T> {
     }
   }
 
-  public delete(key: string) {
+  public del(key: string) {
     const { [key]: value, ...rest } = this.cacheMap;
     this.cacheMap = rest;
     if (!Array.isArray(value)) {
@@ -88,7 +88,7 @@ export default class Cache<T> {
 
   private scheduleEntryDeletion(key: string): ReturnType<typeof setTimeout> {
     return setTimeout(() => {
-      this.delete(key);
+      this.del(key);
     }, this.lifetime);
   }
 
