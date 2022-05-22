@@ -59,10 +59,11 @@ export default class Cache<T> {
   }
 
   public set(key: string, value: T | T[]) {
+    this.handleSchemaValidation(value);
+
     const timeoutKey = this.scheduleEntryDeletion(key);
     this.cacheMap[key] = { data: value, timeoutKey };
 
-    this.handleSchemaValidation(value);
     if (!Array.isArray(value)) {
       this.updateRelatedCacheEntries(key, value);
     }

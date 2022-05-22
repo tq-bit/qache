@@ -27,6 +27,12 @@ const payloadUserThree = {
   firstName: 'Jack',
   secondName: 'Miller',
 };
+const payloadWithAdditionalProperty = {
+  id: '4',
+  firstName: 'Jack',
+  secondName: 'Turpin',
+  familyName: 'Miller',
+};
 
 const payloadUsers = [{ ...payloadUserOne }, { ...payloadUserTwo }];
 
@@ -39,14 +45,29 @@ const payloadUserOneUpdated = {
 describe('Cache class', () => {
   it('Should create a new instance of Cache', () => {
     const cache = new Cache(options);
-
     expect(cache).instanceOf(Cache);
   });
 
-  it('Should be able to store a value for a unique key and retreive it', () => {
+  it('Should store a value for a unique key and retreive it', () => {
     const cache = new Cache(options);
     cache.set(urlUserOne, payloadUserOne);
     expect(cache.get(urlUserOne)).to.deep.equal(payloadUserOne);
+  });
+
+  it('Should create a data-type and a schema when the first entry is added', () => {
+    const cache = new Cache(options);
+    cache.set(urlUserOne, payloadUserOne);
+    expect(cache.datatype).to.equal('object');
+    expect(cache.schema).to.deep.equal(['id', 'firstName', 'secondName']);
+  });
+
+  it('Should throw an error if an entry is to be added that has too many properties', () => {
+    const cache = new Cache(options);
+    cache.set(urlUserOne, payloadUserOne);
+    expect(() =>
+      cache.set('invalid', payloadWithAdditionalProperty),
+    ).to.throw();
+    expect(() => cache.get('invalid')).to.throw();
   });
 
   it('Should add a related cache entry if a new, single entry is added', () => {

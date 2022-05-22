@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "run": "ts-node ./src/index.ts",
-    "test": "mocha -r ts-node/register ./test/*.spec.ts"
+    "test": "mocha -r ts-node/register ./test/*.spec.ts --exit"
   },
   "keywords": [],
   "author": "",
