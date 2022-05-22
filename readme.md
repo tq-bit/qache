@@ -1,11 +1,7 @@
 <div id="top"></div>
 
-[![Contributors][contributors-shield]][contributors-url]
-[![Forks][forks-shield]][forks-url]
-[![Stargazers][stars-shield]][stars-url]
-[![Issues][issues-shield]][issues-url]
-[![MIT License][license-shield]][license-url]
-[![LinkedIn][linkedin-shield]][linkedin-url]
+[![Size][size-shield]][size-shield]
+[![Size][license-shield]][license-shield]
 
 <!-- ABOUT THE PROJECT -->
 ## About The Project
@@ -141,16 +137,7 @@ Project Link: [https://github.com/tq-bit/qache](https://github.com/tq-bit/qache)
 
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
-[contributors-shield]: https://img.shields.io/github/contributors/tq-bit/qache.svg?style=for-the-badge
-[contributors-url]: https://github.com/tq-bit/qache/graphs/contributors
-[forks-shield]: https://img.shields.io/github/forks/tq-bit/qache.svg?style=for-the-badge
-[forks-url]: https://github.com/tq-bit/qache/network/members
-[stars-shield]: https://img.shields.io/github/stars/tq-bit/qache?style=for-the-badge
-[stars-url]: https://github.com/tq-bit/qache/stargazers
-[issues-shield]: https://img.shields.io/github/issues/tq-bit/qache.svg?style=for-the-badge
-[issues-url]: https://github.com/tq-bit/qache/issues
-[license-shield]: https://img.shields.io/github/license/tq-bit/qache.svg?style=for-the-badge
-[license-url]: https://github.com/tq-bit/qache/blob/master/LICENSE.txt
-[linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=for-the-badge&logo=linkedin&colorB=555
-[linkedin-url]: https://linkedin.com/in/othneildrew
-[product-screenshot]: images/screenshot.png
+
+[size-shield]: https://img.shields.io/bundlephobia/min/@tq-bit/qache?style=plastic
+[license-shield]: https://img.shields.io/github/license/tq-bit/qache?style=plastic
+[license-url]: https://github.com/tq-bit/qache/blob/master/LICENSE
