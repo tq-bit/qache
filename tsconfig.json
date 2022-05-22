@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "strict": true,
     "composite": true,
     "moduleResolution": "node",
     "types": ["node", "mocha", "chai"],

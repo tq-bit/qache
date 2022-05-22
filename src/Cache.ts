@@ -166,11 +166,16 @@ export default class Cache<T> {
       if (cachedEntryIsArray) {
         const entries = entryData as T[];
         const indexOfRelevantElement = entries.findIndex((entry: T) => {
-          return (entry as any)[this.entryKey] === key;
+          return (
+            (entry as any)[this.entryKey] === (value as any)[this.entryKey]
+          );
         });
 
-        entries.splice(indexOfRelevantElement, 1);
-        if (value) {
+        if (!value) {
+          entries.splice(indexOfRelevantElement, 1);
+        } else if (indexOfRelevantElement !== -1) {
+          entries[indexOfRelevantElement] = value;
+        } else {
           entries.push({ ...value } as T);
         }
 
