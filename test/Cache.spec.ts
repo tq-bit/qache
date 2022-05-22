@@ -35,6 +35,11 @@ const payloadWithAdditionalProperty = {
 };
 
 const payloadUsers = [{ ...payloadUserOne }, { ...payloadUserTwo }];
+const payloadUsersWithAdditionalProperty = [
+  { ...payloadUserOne },
+  { ...payloadWithAdditionalProperty },
+  { ...payloadUserThree },
+];
 
 const payloadUserOneUpdated = {
   id: '1',
@@ -81,6 +86,21 @@ describe('Cache class', () => {
     expect(cache.get('invalid')).to.be.undefined;
   });
 
+  it('Should throw an error if a list of entries is to be added that has too many properties', () => {
+    const cache = new Cache(options);
+    cache.set(urlUserOne, { ...payloadUserOne });
+    expect(() =>
+      cache.set(urlUsers, payloadUsersWithAdditionalProperty),
+    ).to.throw();
+    expect(cache.get(urlUsers)).to.be.undefined;
+  });
+
+  it('Should throw an error if an unknown datatype is added to a cache', () => {
+    const cache = new Cache(options);
+    cache.set(urlUserOne, { ...payloadUserOne });
+    expect(() => cache.set('invalid', 'invalid')).to.throw();
+  });
+
   it('Should add a related cache entry if a new, single entry is added', () => {
     const cache = new Cache(options);
     cache.set(urlUsers, [...payloadUsers]);
@@ -114,5 +134,13 @@ describe('Cache class', () => {
     expect(cache.get(urlUserOne)).to.be.undefined;
     expect(cache.get(urlUserTwo)).to.be.undefined;
     expect(cache.get(urlUsers)).to.be.undefined;
+  });
+
+  it('Should increment its hit-counter whenever a set, get or delete method is used', () => {
+    const cache = new Cache(options);
+    cache.set(urlUserOne, { ...payloadUserOne });
+    cache.get(urlUserOne);
+    cache.del(urlUserOne);
+    expect(cache.stats().hits).to.equal(3);
   });
 });
