@@ -46,6 +46,7 @@ export default class Cache<T> {
   private entryKey: string;
   private lifetime: number;
   private datatype: CacheDataType;
+  private validate: boolean;
   private schema: string[];
   private cacheMap: {
     [key: string]: {
@@ -56,20 +57,23 @@ export default class Cache<T> {
   private debug: boolean;
 
   constructor({
-    cacheKey,
-    entryKey,
-    lifetime,
+    cacheKey = 'default',
+    entryKey = 'id',
+    lifetime = 1000 * 60 * 5,
+    validate = true,
     debug = false,
   }: {
-    cacheKey: string;
-    entryKey: string;
-    lifetime: number;
-    debug: boolean;
+    cacheKey?: string;
+    entryKey?: string;
+    lifetime?: number;
+    validate?: boolean;
+    debug?: boolean;
   }) {
-    this.cacheKey = cacheKey || 'default';
-    this.entryKey = entryKey || 'id';
-    this.lifetime = lifetime || 1000 * 60 * 5;
+    this.cacheKey = cacheKey;
+    this.entryKey = entryKey;
+    this.lifetime = lifetime;
     this.datatype = null;
+    this.validate = validate;
     this.schema = [];
     this.cacheMap = {};
     this.debug = debug;
@@ -83,7 +87,9 @@ export default class Cache<T> {
    * @param       customLifetime? Custom lifetime for this entry
    */
   public set(key: string, value: T | T[], customLifetime?: number) {
-    this.handleSchemaValidation(value);
+    if (this.validate) {
+      this.handleSchemaValidation(value);
+    }
 
     const timeoutKey = this.scheduleEntryDeletion(key, customLifetime);
     this.cacheMap[key] = { data: value, timeoutKey };
@@ -268,7 +274,7 @@ export default class Cache<T> {
     throw new Error(`Error in cache ${this.cacheKey}: \n ${message}`);
   }
 
-  private log(message) {
+  private log(message: any) {
     if (this.debug === true) {
       console.dir(message);
     }
