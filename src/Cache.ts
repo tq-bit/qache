@@ -97,7 +97,7 @@ export default class Cache<T> {
    * @returns {T | T[]} The value of the cache entry
    */
   public get(key: string): T | T[] | undefined {
-    if (!!this.cacheMap[key]) {
+    if (this.cacheMap[key]) {
       return this.cacheMap[key]?.data;
     } else {
       this.throwError(`Key ${key} not found in cache`);
@@ -231,7 +231,7 @@ export default class Cache<T> {
       if (cachedEntryIsArray) {
         const entries = entryData as T[];
         const indexOfRelevantElement = entries.findIndex((entry: T) => {
-          if (!!value) {
+          if (value) {
             return (
               (entry as any)[this.entryKey] === (value as any)[this.entryKey]
             );
