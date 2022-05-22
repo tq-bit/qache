@@ -100,4 +100,17 @@ describe('Cache class', () => {
     cache.del(urlUserOne);
     expect(cache.get(urlUsers)).to.not.deep.include(payloadUserOne);
   });
+
+  it('Should delete all entries in the cache and reset schemata when flushed', () => {
+    const cache = new Cache(options);
+    cache.set(urlUserOne, { ...payloadUserOne });
+    cache.set(urlUserTwo, { ...payloadUserTwo });
+    cache.set(urlUsers, [...payloadUsers]);
+    cache.flush();
+    expect(() => cache.get(urlUserOne)).to.throw();
+    expect(() => cache.get(urlUserTwo)).to.throw();
+    expect(() => cache.get(urlUsers)).to.throw();
+    expect(cache.datatype).to.be.null;
+    expect(cache.schema).to.be.empty;
+  });
 });

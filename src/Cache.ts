@@ -58,10 +58,10 @@ export default class Cache<T> {
     this.cacheMap = {};
   }
 
-  public set(key: string, value: T | T[]) {
+  public set(key: string, value: T | T[], customLifetime?: number) {
     this.handleSchemaValidation(value);
 
-    const timeoutKey = this.scheduleEntryDeletion(key);
+    const timeoutKey = this.scheduleEntryDeletion(key, customLifetime);
     this.cacheMap[key] = { data: value, timeoutKey };
 
     if (!Array.isArray(value)) {
@@ -86,10 +86,29 @@ export default class Cache<T> {
     return value;
   }
 
-  private scheduleEntryDeletion(key: string): ReturnType<typeof setTimeout> {
+  public stats() {
+    return {
+      cacheKey: this.cacheKey,
+      entryKey: this.entryKey,
+      lifetime: this.lifetime,
+      datatype: this.datatype,
+      schema: this.schema,
+    };
+  }
+
+  public flush() {
+    this.cacheMap = {};
+    this.datatype = null;
+    this.schema = [];
+  }
+
+  private scheduleEntryDeletion(
+    key: string,
+    customLifetime?: number,
+  ): ReturnType<typeof setTimeout> {
     return setTimeout(() => {
       this.del(key);
-    }, this.lifetime);
+    }, customLifetime || this.lifetime);
   }
 
   private handleSchemaValidation(value: T | T[]) {
