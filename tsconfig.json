@@ -6,7 +6,8 @@
     "strict": true,
     "declaration": true,
     "moduleResolution": "node",
-    "types": ["node", "mocha", "chai"]
+    "types": ["node", "mocha", "chai"],
+    "sourceMap": true
   },
   "include": ["src/**/*"],
   "exclude": ["node_modules", "**/*.spec.ts"]
