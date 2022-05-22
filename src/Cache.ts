@@ -17,6 +17,7 @@ interface CacheStats {
   datatype: CacheDataType;
   schema: string[];
   count: number;
+  hits: number;
 }
 
 /**
@@ -54,6 +55,7 @@ export default class Cache<T> {
       timeoutKey: ReturnType<typeof setTimeout>;
     };
   };
+  private hits: number;
   private debug: boolean;
 
   constructor({
@@ -77,6 +79,7 @@ export default class Cache<T> {
     this.schema = [];
     this.cacheMap = {};
     this.debug = debug;
+    this.hits = 0;
   }
 
   /**
@@ -94,6 +97,7 @@ export default class Cache<T> {
    * })
    */
   public set(key: string, value: T | T[], customLifetime?: number) {
+    this.hits++;
     if (this.validate) {
       this.handleSchemaValidation(value);
     }
@@ -125,6 +129,7 @@ export default class Cache<T> {
    *
    */
   public get(key: string): T | T[] | undefined {
+    this.hits++;
     if (this.cacheMap[key]) {
       this.log(`Retrieving key ${key} from cache ${this.cacheKey}`);
       return this.cacheMap[key]?.data;
@@ -145,6 +150,7 @@ export default class Cache<T> {
    * // Returns true
    */
   public del(key: string): boolean {
+    this.hits++;
     this.log(`Deleting key ${key} from cache ${this.cacheKey}`);
     const { [key]: value, ...rest } = this.cacheMap;
     this.cacheMap = rest;
@@ -167,6 +173,7 @@ export default class Cache<T> {
       datatype: this.datatype,
       schema: this.schema,
       count: Object.keys(this.cacheMap).length,
+      hits: this.hits,
     };
   }
 
@@ -175,6 +182,7 @@ export default class Cache<T> {
    *              Does not reset schemata and datatype.
    */
   public flush() {
+    this.hits = 0;
     this.cacheMap = {};
   }
 
