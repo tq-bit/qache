@@ -7,12 +7,13 @@
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
-I created Qache to provide secure and predictable HTTP - caching in a Vue app. Besides caching single values, it also needed to keep related entries in sync. As a consequence, it comes with a few opinionated (but optional) default features:
+Qache was created to provide secure and predictable HTTP - caching for one of my Vue apps. Besides caching single values, it also needed to keep related entries in sync. As a consequence, it comes with a few opinionated (but optional) default features:
 
 - **One cache per API resource** -> Each endpoint an application targets must have its own Qache instance
 - **Schema validation** -> The first entry that is added into the cache defines the schema for other entries
 - **Default TTL** -> Default TTL for entries is set to 15 minutes
 - **Type safety** -> You can use Typescript Generics to improve Qache's intellisense
+- **Automatic cache updates** -> When a single entry is created or updated by its key, related entries are automatically updated as well
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
@@ -102,6 +103,16 @@ cache.set('api/posts/', [
 ```
 
 If you assign an array if items, the structure of the first entry will be used for validation.
+
+### Automatic cache updates
+
+When a single entry is created or updated, all related cached entries are automatically updated as well. Qache will iterate through all array-like entries in the cache, try to find matches and update them accordingly. It works like this:
+
+1. A new entry is added to the cache
+2. Qache will check if there are one or more collection items (= `Arrays`) in its cache-map
+3. It will then either `add` or `update` entries into these collection types
+
+Deleting entries works analogous. If a single entry is removed from the cache, all collections will be updated accordingly.
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
