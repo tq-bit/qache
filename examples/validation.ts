@@ -47,7 +47,7 @@ cache.set('/posts', posts);
 
 // This assignment will fail and throw an error
 // [userId,id,title,description] !== [userId,id,title,body]
-cache.set('/invalid', invalidPost);
+// cache.set('/invalid', invalidPost);
 
 // You can turn off validation by setting the 'validate' option to false
 // and leaving the type out of the Cache constructor
