@@ -1,5 +1,7 @@
 <div id="top"></div>
 
+# Qache - A lightweight and secure Typescript caching module
+
 [![License][license-shield]][license-shield]
 [![Size][size-shield]][size-shield]
 [![Github Commits][commit-shield]][commit-shield]
@@ -7,13 +9,7 @@
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
-Qache was created to provide secure and predictable HTTP - caching for one of my Vue apps. Besides caching single values, it also needed to keep related entries in sync. As a consequence, it comes with a few opinionated (but optional) default features:
-
-- **One cache per API resource** -> Each endpoint an application targets must have its own Qache instance
-- **Schema validation** -> The first entry that is added into the cache defines the schema for other entries
-- **Default TTL** -> Default TTL for entries is set to 15 minutes
-- **Type safety** -> You can use Typescript Generics to improve Qache's intellisense
-- **Automatic cache updates** -> When a single entry is created or updated by its key, related entries are automatically updated as well
+Qache was created to provide secure and predictable HTTP - caching for one of my Vue apps.
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
@@ -41,6 +37,59 @@ npm install @tq-bit/qache
 <!-- USAGE EXAMPLES -->
 ## Usage
 
+Besides caching single values, it also needed to keep related entries in sync. As a consequence, it comes with a few opinionated (but optional) default features:
+
+- **One cache per API resource** -> Each endpoint an application targets must have its own Qache instance
+- **Schema validation** -> The first entry that is added into the cache defines the schema for other entries
+- **Default TTL** -> Default TTL for entries is set to 15 minutes
+- **Type safety** -> You can use Typescript Generics to improve Qache's intellisense
+- **Automatic cache updates** -> When a single entry is created or updated by its key, related entries are automatically updated as well
+
+### Configuration API
+
+#### `cacheKey` {string}
+
+Name of the cache instance. Currently only useful for debugging.
+
+**Default**: `'default'`
+
+#### `cacheKey` {string}
+
+Name of the property Qache uses to try and match entries for [automatic cache updates](#automatic-cache-updates)
+
+**Default**: `'id'`
+
+#### `lifetime` {number}
+
+Lifetime of a single cache entry in MS
+
+**Default**: `1000 * 60 * 15 (= 5 minutes)`
+
+#### `validate` {bool}
+
+Whether or not to validate entries that are added to the cache
+
+**Default**: `true`
+
+#### `debug` {bool}
+
+Set to `true` to enable verbose logging
+
+**Default**: `false`
+
+#### Default configuration example
+
+This is the default configuration used by the Qache constructor:
+
+```ts
+{
+  cacheKey = 'default',
+  entryKey = 'id',
+  lifetime = 1000 * 60 * 5,
+  validate = true,
+  debug = false,
+}
+```
 
 ### Create a new cache instance
 
