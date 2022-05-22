@@ -50,7 +50,14 @@ export default class Cache<T> {
      *
      * @param       key Identifier of the cache entry
      * @param       value Value of the cache entry
-     * @param       customLifetime? Custom lifetime for this entry
+     * @param       customLifetime Custom lifetime for this entry
+     *
+     * @example
+     * cache.set('/users/1', {
+     *  id: '1',
+     *  firstName: 'John',
+     *  secondName: 'Doe',
+     * })
      */
     set(key: string, value: T | T[], customLifetime?: number): void;
     /**
@@ -59,6 +66,17 @@ export default class Cache<T> {
      * @param       key Identifier of the cache entry
      *
      * @returns {T | T[]} The value of the cache entry
+     *
+     * @example
+     * const user = cache.get('/users/1');
+     * console.log(user);
+     * // Prints
+     * // {
+     * //  id: '1',
+     * //  firstName: 'John',
+     * //  secondName: 'Doe',
+     * // }
+     *
      */
     get(key: string): T | T[] | undefined;
     /**
@@ -67,6 +85,10 @@ export default class Cache<T> {
      * @param       key Identifier of the cache entry
      *
      * @returns     {boolean} Whether the entry was deleted
+     *
+     * @example
+     * cache.del('/users/1');
+     * // Returns true
      */
     del(key: string): boolean;
     /**

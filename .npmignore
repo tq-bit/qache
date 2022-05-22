@@ -1,6 +1,8 @@
 src/*
 test/*
+examples/*
+.nyc_output/*
+
 prettier.config.js
-.nyc_output
 .gitignore
 .eslintrc
