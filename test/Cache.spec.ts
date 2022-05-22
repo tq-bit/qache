@@ -64,8 +64,12 @@ describe('Cache class', () => {
   it('Should create a data-type and a schema when the first entry is added', () => {
     const cache = new Cache(options);
     cache.set(urlUserOne, { ...payloadUserOne });
-    expect(cache.datatype).to.equal('object');
-    expect(cache.schema).to.deep.equal(['id', 'firstName', 'secondName']);
+    expect(cache.stats().datatype).to.equal('object');
+    expect(cache.stats().schema).to.deep.equal([
+      'id',
+      'firstName',
+      'secondName',
+    ]);
   });
 
   it('Should throw an error if an entry is to be added that has too many properties', () => {
@@ -110,7 +114,7 @@ describe('Cache class', () => {
     expect(() => cache.get(urlUserOne)).to.throw();
     expect(() => cache.get(urlUserTwo)).to.throw();
     expect(() => cache.get(urlUsers)).to.throw();
-    expect(cache.datatype).to.be.null;
-    expect(cache.schema).to.be.empty;
+    expect(cache.stats().datatype).to.be.null;
+    expect(cache.stats().schema).to.be.empty;
   });
 });

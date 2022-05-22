@@ -1,7 +1,28 @@
+type CacheDataType =
+  | 'string'
+  | 'number'
+  | 'bigint'
+  | 'boolean'
+  | 'symbol'
+  | 'undefined'
+  | 'object'
+  | 'function'
+  | 'array'
+  | null;
+
+interface CacheStats {
+  cacheKey: string;
+  entryKey: string;
+  lifetime: number;
+  datatype: CacheDataType;
+  schema: string[];
+  count: number;
+}
+
 /**
  * @class
  *
- * @description A custom class for general- and HTTP caching.
+ * @description A simple key-value cache. Built to store typed and structured data.
  *
  * @property    {cacheKey} string A unique identifier for the Cache instance.
  * @property    {entryKey} string The property that defines the cache entry
@@ -19,22 +40,12 @@
  * });
  */
 export default class Cache<T> {
-  cacheKey: string;
-  entryKey: string;
-  lifetime: number;
-  datatype:
-    | 'string'
-    | 'number'
-    | 'bigint'
-    | 'boolean'
-    | 'symbol'
-    | 'undefined'
-    | 'object'
-    | 'function'
-    | 'array'
-    | null;
-  schema: string[];
-  cacheMap: {
+  private cacheKey: string;
+  private entryKey: string;
+  private lifetime: number;
+  private datatype: CacheDataType;
+  private schema: string[];
+  private cacheMap: {
     [key: string]: {
       data: T | T[];
       timeoutKey: ReturnType<typeof setTimeout>;
@@ -58,6 +69,13 @@ export default class Cache<T> {
     this.cacheMap = {};
   }
 
+  /**
+   * @description Adds an entry to the cache.
+   *
+   * @param       key Identifier of the cache entry
+   * @param       value Value of the cache entry
+   * @param       customLifetime? Custom lifetime for this entry
+   */
   public set(key: string, value: T | T[], customLifetime?: number) {
     this.handleSchemaValidation(value);
 
@@ -69,7 +87,14 @@ export default class Cache<T> {
     }
   }
 
-  public get(key: string): any {
+  /**
+   * @description Get a value from the cache.
+   *
+   * @param       key Identifier of the cache entry
+   *
+   * @returns {T | T[]} The value of the cache entry
+   */
+  public get(key: string): T | T[] {
     if (!!this.cacheMap[key]) {
       return this.cacheMap[key]?.data;
     } else {
@@ -77,29 +102,44 @@ export default class Cache<T> {
     }
   }
 
-  public del(key: string) {
+  /**
+   * @description Deletes a single entry from the cache
+   *
+   * @param       key Identifier of the cache entry
+   *
+   * @returns     {boolean} Whether the entry was deleted
+   */
+  public del(key: string): boolean {
     const { [key]: value, ...rest } = this.cacheMap;
     this.cacheMap = rest;
     if (!Array.isArray(value)) {
       this.updateRelatedCacheEntries(key);
     }
-    return value;
+    return !!value?.data;
   }
 
-  public stats() {
+  /**
+   * @description Get details about the cache instance
+   *
+   * @returns {CacheStats} A list of details about the current cache instance
+   */
+  public stats(): CacheStats {
     return {
       cacheKey: this.cacheKey,
       entryKey: this.entryKey,
       lifetime: this.lifetime,
       datatype: this.datatype,
       schema: this.schema,
+      count: Object.keys(this.cacheMap).length,
     };
   }
 
+  /**
+   * @description Resets the cache instance.
+   *              Does not reset schemata and datatype.
+   */
   public flush() {
     this.cacheMap = {};
-    this.datatype = null;
-    this.schema = [];
   }
 
   private scheduleEntryDeletion(
