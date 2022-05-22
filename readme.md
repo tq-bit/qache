@@ -4,7 +4,7 @@
 
   <h1 align="center">Qache</h1>
 
-  <p align="center">A lightweight and secure caching module - built with Typescript</p>
+  <p align="center">Zero-dependency, lightweight caching module for Node.js and the browser - built with Typescript</p>
 
   <div align="center">
     <img alt="License" src="https://img.shields.io/github/license/tq-bit/qache?style=plastic"/>
