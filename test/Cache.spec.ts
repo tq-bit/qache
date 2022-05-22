@@ -114,7 +114,5 @@ describe('Cache class', () => {
     expect(() => cache.get(urlUserOne)).to.throw();
     expect(() => cache.get(urlUserTwo)).to.throw();
     expect(() => cache.get(urlUsers)).to.throw();
-    expect(cache.stats().datatype).to.be.null;
-    expect(cache.stats().schema).to.be.empty;
   });
 });

@@ -23,6 +23,8 @@ interface CacheStats {
  * @class
  *
  * @description A simple key-value cache. Built to store typed and structured data.
+ *              Qache is built for simplicity - it clones all data and stores them
+ *              instead of keeping their references in memory.
  *
  * @property    {cacheKey} string A unique identifier for the Cache instance.
  * @property    {entryKey} string The property that defines the cache entry
@@ -94,7 +96,7 @@ export default class Cache<T> {
    *
    * @returns {T | T[]} The value of the cache entry
    */
-  public get(key: string): T | T[] {
+  public get(key: string): T | T[] | undefined {
     if (!!this.cacheMap[key]) {
       return this.cacheMap[key]?.data;
     } else {
