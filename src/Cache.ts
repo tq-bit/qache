@@ -53,15 +53,18 @@ export default class Cache<T> {
       timeoutKey: ReturnType<typeof setTimeout>;
     };
   };
+  private debug: boolean;
 
   constructor({
     cacheKey,
     entryKey,
     lifetime,
+    debug = false,
   }: {
     cacheKey: string;
     entryKey: string;
     lifetime: number;
+    debug: boolean;
   }) {
     this.cacheKey = cacheKey || 'default';
     this.entryKey = entryKey || 'id';
@@ -69,6 +72,7 @@ export default class Cache<T> {
     this.datatype = null;
     this.schema = [];
     this.cacheMap = {};
+    this.debug = debug;
   }
 
   /**
@@ -98,9 +102,10 @@ export default class Cache<T> {
    */
   public get(key: string): T | T[] | undefined {
     if (this.cacheMap[key]) {
+      this.log(`Retrieving key ${key} from cache ${this.cacheKey}`);
       return this.cacheMap[key]?.data;
     } else {
-      console.warn(`Key ${key} not found in cache`);
+      this.log(`Key ${key} not found in cache`);
     }
   }
 
@@ -112,6 +117,7 @@ export default class Cache<T> {
    * @returns     {boolean} Whether the entry was deleted
    */
   public del(key: string): boolean {
+    this.log(`Deleting key ${key} from cache ${this.cacheKey}`);
     const { [key]: value, ...rest } = this.cacheMap;
     this.cacheMap = rest;
     if (!Array.isArray(value)) {
@@ -155,9 +161,12 @@ export default class Cache<T> {
 
   private handleSchemaValidation(value: T | T[]) {
     if (!this.datatype) {
+      this.log(`Setting datatype to ${typeof value} in cache ${this.cacheKey}`);
       this.setDatatype(value);
       this.setSchema(value);
     } else {
+      this.log(`Validating datatype in cache ${this.cacheKey}`);
+      this.log(value);
       this.validateDatatype(value);
       this.validateSchema(value);
     }
@@ -257,5 +266,11 @@ export default class Cache<T> {
 
   private throwError(message: string) {
     throw new Error(`Error in cache ${this.cacheKey}: \n ${message}`);
+  }
+
+  private log(message) {
+    if (this.debug === true) {
+      console.dir(message);
+    }
   }
 }
