@@ -1,6 +1,11 @@
 import Cache from '../dist';
 
-const cache = new Cache({
+const cache = new Cache<{
+  userId: number;
+  id: number;
+  title: string;
+  body: string;
+}>({
   cacheKey: 'posts',
   entryKey: 'id',
   lifetime: 1000 * 60 * 5,
@@ -42,9 +47,10 @@ cache.set('/posts', posts);
 
 // This assignment will fail and throw an error
 // [userId,id,title,description] !== [userId,id,title,body]
-// cache.set('/invalid', invalidPost);
+cache.set('/invalid', invalidPost);
 
 // You can turn off validation by setting the 'validate' option to false
+// and leaving the type out of the Cache constructor
 const cacheWithoutValidation = new Cache({
   cacheKey: 'posts',
   entryKey: 'id',
