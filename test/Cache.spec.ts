@@ -4,7 +4,7 @@ import { expect } from 'chai';
 const options = {
   cacheKey: 'default',
   entryKey: 'id',
-  lifetime: 1000 * 60 * 5,
+  lifetime: 5000,
 };
 
 const urlUsers = '/api/v1/users';
@@ -50,20 +50,27 @@ describe('Cache class', () => {
 
   it('Should store a value for a unique key and retreive it', () => {
     const cache = new Cache(options);
-    cache.set(urlUserOne, payloadUserOne);
+    cache.set(urlUserOne, { ...payloadUserOne });
     expect(cache.get(urlUserOne)).to.deep.equal(payloadUserOne);
+  });
+
+  it('Should delete a value for a unique key', () => {
+    const cache = new Cache(options);
+    cache.set(urlUserOne, { ...payloadUserOne });
+    cache.delete(urlUserOne);
+    expect(() => cache.get(urlUserOne)).to.throw();
   });
 
   it('Should create a data-type and a schema when the first entry is added', () => {
     const cache = new Cache(options);
-    cache.set(urlUserOne, payloadUserOne);
+    cache.set(urlUserOne, { ...payloadUserOne });
     expect(cache.datatype).to.equal('object');
     expect(cache.schema).to.deep.equal(['id', 'firstName', 'secondName']);
   });
 
   it('Should throw an error if an entry is to be added that has too many properties', () => {
     const cache = new Cache(options);
-    cache.set(urlUserOne, payloadUserOne);
+    cache.set(urlUserOne, { ...payloadUserOne });
     expect(() =>
       cache.set('invalid', payloadWithAdditionalProperty),
     ).to.throw();
@@ -72,17 +79,27 @@ describe('Cache class', () => {
 
   it('Should add a related cache entry if a new, single entry is added', () => {
     const cache = new Cache(options);
-    cache.set(urlUsers, payloadUsers);
-    cache.set(urlUserThree, payloadUserThree);
+    cache.set(urlUsers, [...payloadUsers]);
+    cache.set(urlUserThree, { ...payloadUserThree });
     expect(cache.get(urlUsers)).to.deep.include(payloadUserThree);
   });
 
   it('Should update related cache entries if a single entry is updated by its key', () => {
     const cache = new Cache(options);
-    cache.set(urlUserOne, payloadUserOne);
-    cache.set(urlUsers, payloadUsers);
+    cache.set(urlUserOne, { ...payloadUserOne });
+    cache.set(urlUsers, [...payloadUsers]);
 
-    cache.set(urlUserOne, payloadUserOneUpdated);
+    cache.set(urlUserOne, { ...payloadUserOneUpdated });
     expect(cache.get(urlUsers)).to.deep.include(payloadUserOneUpdated);
+  });
+
+  it('Should delete a value from a related cache entry if an existing value is delted', () => {
+    const cache = new Cache(options);
+    cache.set(urlUserOne, { ...payloadUserOne });
+    cache.set(urlUsers, [...payloadUsers]);
+    console.log(cache.get(urlUsers));
+    cache.delete(urlUserOne);
+    console.log(cache.get(urlUsers));
+    expect(cache.get(urlUsers)).to.not.deep.include(payloadUserOne);
   });
 });

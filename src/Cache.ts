@@ -77,15 +77,18 @@ export default class Cache<T> {
     }
   }
 
-  public deleteValue(key: string) {
+  public delete(key: string) {
     const { [key]: value, ...rest } = this.cacheMap;
     this.cacheMap = rest;
+    if (!Array.isArray(value)) {
+      this.updateRelatedCacheEntries(key);
+    }
     return value;
   }
 
   private scheduleEntryDeletion(key: string): ReturnType<typeof setTimeout> {
     return setTimeout(() => {
-      this.deleteValue(key);
+      this.delete(key);
     }, this.lifetime);
   }
 
@@ -159,7 +162,7 @@ export default class Cache<T> {
     }
   }
 
-  private updateRelatedCacheEntries(key: string, value: T) {
+  private updateRelatedCacheEntries(key: string, value?: T) {
     for (const cacheMapKey in this.cacheMap) {
       const entryData = this.cacheMap[cacheMapKey]?.data;
       const cachedEntryIsArray = Array.isArray(entryData);
@@ -167,14 +170,17 @@ export default class Cache<T> {
       if (cachedEntryIsArray) {
         const entries = entryData as T[];
         const indexOfRelevantElement = entries.findIndex((entry: T) => {
-          return (
-            (entry as any)[this.entryKey] === (value as any)[this.entryKey]
-          );
+          if (!!value) {
+            return (
+              (entry as any)[this.entryKey] === (value as any)[this.entryKey]
+            );
+          } else {
+            return -1;
+          }
         });
-
-        if (!value) {
+        if (!value && indexOfRelevantElement !== -1) {
           entries.splice(indexOfRelevantElement, 1);
-        } else if (indexOfRelevantElement !== -1) {
+        } else if (!!value && indexOfRelevantElement !== -1) {
           entries[indexOfRelevantElement] = value;
         } else {
           entries.push({ ...value } as T);
