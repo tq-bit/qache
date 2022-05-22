@@ -1,7 +1,8 @@
 <div id="top"></div>
 
+[![License][license-shield]][license-shield]
 [![Size][size-shield]][size-shield]
-[![Size][license-shield]][license-shield]
+[![Github Commits][commit-shield]][commit-shield]
 
 <!-- ABOUT THE PROJECT -->
 ## About The Project
@@ -118,7 +119,7 @@ If you assign an array if items, the structure of the first entry will be used f
 <!-- LICENSE -->
 ## License
 
-Distributed under the MIT License. See `LICENSE.txt` for more information.
+Distributed under the MIT License. See `LICENSE` for more information.
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
@@ -141,3 +142,4 @@ Project Link: [https://github.com/tq-bit/qache](https://github.com/tq-bit/qache)
 [size-shield]: https://img.shields.io/bundlephobia/min/@tq-bit/qache?style=plastic
 [license-shield]: https://img.shields.io/github/license/tq-bit/qache?style=plastic
 [license-url]: https://github.com/tq-bit/qache/blob/master/LICENSE
+[commit-shield]: https://img.shields.io/github/last-commit/tq-bit/qache?style=plastic&logo=git

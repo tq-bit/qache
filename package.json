@@ -15,6 +15,10 @@
     "node",
     "browser"
   ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tq-bit/qache.git"
+  },
   "author": "tobi@q-bit.me",
   "license": "MIT",
   "devDependencies": {
