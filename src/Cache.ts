@@ -100,7 +100,7 @@ export default class Cache<T> {
     if (this.cacheMap[key]) {
       return this.cacheMap[key]?.data;
     } else {
-      this.throwError(`Key ${key} not found in cache`);
+      console.warn(`Key ${key} not found in cache`);
     }
   }
 

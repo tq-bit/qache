@@ -58,7 +58,7 @@ describe('Cache class', () => {
     const cache = new Cache(options);
     cache.set(urlUserOne, { ...payloadUserOne });
     cache.del(urlUserOne);
-    expect(() => cache.get(urlUserOne)).to.throw();
+    expect(cache.get(urlUserOne)).to.be.undefined;
   });
 
   it('Should create a data-type and a schema when the first entry is added', () => {
@@ -78,7 +78,7 @@ describe('Cache class', () => {
     expect(() =>
       cache.set('invalid', payloadWithAdditionalProperty),
     ).to.throw();
-    expect(() => cache.get('invalid')).to.throw();
+    expect(cache.get('invalid')).to.be.undefined;
   });
 
   it('Should add a related cache entry if a new, single entry is added', () => {
@@ -111,8 +111,8 @@ describe('Cache class', () => {
     cache.set(urlUserTwo, { ...payloadUserTwo });
     cache.set(urlUsers, [...payloadUsers]);
     cache.flush();
-    expect(() => cache.get(urlUserOne)).to.throw();
-    expect(() => cache.get(urlUserTwo)).to.throw();
-    expect(() => cache.get(urlUsers)).to.throw();
+    expect(cache.get(urlUserOne)).to.be.undefined;
+    expect(cache.get(urlUserTwo)).to.be.undefined;
+    expect(cache.get(urlUsers)).to.be.undefined;
   });
 });
