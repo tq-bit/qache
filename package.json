@@ -1,11 +1,11 @@
 {
-  "name": "qache",
+  "name": "@tq-bit/qache",
   "version": "0.1.0",
   "description": "Zero-dependency, lightweight caching module for Node.js and the browser",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
-    "release": "npm run lint && npm run test && npm run build",
+    "release": "npm run lint && npm run test && npm run build && npm publish --access public",
     "lint": "eslint ./src/** --fix",
     "test": "nyc mocha -r ts-node/register ./test/*.spec.ts --exit",
     "build": "tsc"
@@ -15,7 +15,7 @@
     "node",
     "browser"
   ],
-  "author": "TQ-bit",
+  "author": "tobi@q-bit.me",
   "license": "MIT",
   "devDependencies": {
     "@types/chai": "^4.3.1",
