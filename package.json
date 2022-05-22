@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "run": "ts-node ./src/index.ts",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "mocha -r ts-node/register ./test/*.spec.ts"
   },
   "keywords": [],
   "author": "",
@@ -20,6 +20,7 @@
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-prettier": "^4.0.0",
     "mocha": "^10.0.0",
+    "ts-node": "^10.8.0",
     "typescript": "^4.6.4"
   }
 }

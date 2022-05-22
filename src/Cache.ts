@@ -33,6 +33,7 @@ export default class Cache<T> {
     | 'function'
     | 'array'
     | null;
+  schema: string[];
   cacheMap: {
     [key: string]: {
       data: T | T[];
@@ -53,6 +54,7 @@ export default class Cache<T> {
     this.entryKey = entryKey || 'id';
     this.lifetime = lifetime || 1000 * 60 * 5;
     this.datatype = null;
+    this.schema = [];
     this.cacheMap = {};
   }
 
@@ -70,7 +72,7 @@ export default class Cache<T> {
     if (!!this.cacheMap[key]) {
       return this.cacheMap[key]?.data;
     } else {
-      throw new Error(`Key ${key} not found in cache`);
+      this.throwError(`Key ${key} not found in cache`);
     }
   }
 
@@ -89,8 +91,10 @@ export default class Cache<T> {
   private handleSchemaValidation(value: T | T[]) {
     if (!this.datatype) {
       this.setDatatype(value);
+      this.setSchema(value);
     } else {
       this.validateDatatype(value);
+      this.validateSchema(value);
     }
   }
 
@@ -101,9 +105,56 @@ export default class Cache<T> {
   private validateDatatype(value: T | T[]) {
     const hasCorrectType: boolean = this.datatype === typeof value;
     if (!hasCorrectType) {
-      throw new Error(
+      this.throwError(
         `Attempted to assign ${typeof value} to ${this.datatype} cache`,
       );
+    }
+  }
+
+  private setSchema(value: T | T[]) {
+    if (Array.isArray(value)) {
+      this.schema = Object.keys(value[0]);
+    } else {
+      this.schema = Object.keys(value);
+    }
+  }
+
+  private validateSchema(value: T | T[]) {
+    const validateItemArray = (value: T[]) => {
+      value.forEach((entry, index) => {
+        const hasCorrectSchema: boolean = Object.keys(entry).every(
+          (valueKey) => {
+            return this.schema.includes(valueKey);
+          },
+        );
+        if (!hasCorrectSchema) {
+          this.throwError(
+            `Schema mismatch for item at position ${index} - [${Object.keys(
+              value[index],
+            )}] does not match schema [${this.schema}]`,
+          );
+        }
+      });
+    };
+
+    const validateItem = (value: T) => {
+      const hasCorrectSchema: boolean = Object.keys(value).every((valueKey) => {
+        return this.schema.includes(valueKey);
+      });
+
+      if (!hasCorrectSchema) {
+        this.throwError(
+          `Schema mismatch for item - [${Object.keys(
+            value,
+          )}] does not match schema [${this.schema}]`,
+        );
+      }
+    };
+
+    if (Array.isArray(value)) {
+      validateItemArray(value);
+    } else {
+      validateItem(value);
     }
   }
 
@@ -129,5 +180,9 @@ export default class Cache<T> {
         };
       }
     }
+  }
+
+  private throwError(message: string) {
+    throw new Error(`Error in cache ${this.cacheKey}: \n ${message}`);
   }
 }
