@@ -1,10 +1,17 @@
 <div id="top"></div>
 
-# Qache - A lightweight and secure Typescript caching module
+<div align="center">
 
-[![License][license-shield]][license-shield]
-[![Size][size-shield]][size-shield]
-[![Github Commits][commit-shield]][commit-shield]
+  <h1 align="center">Qache</h1>
+
+  <p align="center">A lightweight and secure caching module - built with Typescript</p>
+
+  <div align="center">
+    <img alt="License" src="https://img.shields.io/github/license/tq-bit/qache?style=plastic"/>
+    <img alt="Size" src="https://img.shields.io/bundlephobia/min/@tq-bit/qache?style=plastic">
+    <img alt="GitHub last commit" src="https://img.shields.io/github/last-commit/tq-bit/qache?style=plastic&logo=git"/>
+  </div>
+</div>
 
 <!-- ABOUT THE PROJECT -->
 ## About The Project
@@ -13,14 +20,10 @@ Qache was created to provide secure and predictable HTTP - caching for one of my
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
-
-
 <!-- GETTING STARTED -->
 ## Getting Started
 
-### Prerequisites
-
-Qache has a tiny footprint (8.5kb zipped) and no dependencies. It can be used in any Browser or Node environment.
+Qache has a tiny footprint and no dependencies. It can be used in any Browser or Node (v14+) environment.
 
 ### Installation
 
@@ -31,8 +34,6 @@ npm install @tq-bit/qache
 ```
 
 <p align="right">(<a href="#top">back to top</a>)</p>
-
-
 
 <!-- USAGE EXAMPLES -->
 ## Usage
@@ -121,15 +122,13 @@ const typedCache = new Cache<Post>({
 });
 ```
 
-### Add and update entries to the cache
+### Add and update entries to/in the cache
 
 Each cache entry is saved a simple Javascript Object. It is identified by a `key` and has a dedicated `timeout` instance. This prevents the process from running through every entry to check for individual timeouts.
 
-New entries can be created the same way updates are done:
+New entries can be created the same way updates are done.
 
 ```ts
-// The first entry's structure will be used to validate
-// all further entries
 cache.set('api/posts/1', {
   id: 1,
   title: 'Lorem Ipsum',
@@ -151,7 +150,7 @@ cache.set('api/posts/', [
 ]);
 ```
 
-If you assign an array if items, the structure of the first entry will be used for validation.
+> The first entry's structure will be used to validate all further entries. If you assign an array if items, the structure of the first entry will be used for validation.
 
 ### Automatic cache updates
 
@@ -165,13 +164,12 @@ Deleting entries works analogous. If a single entry is removed from the cache, a
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
-
-
 <!-- ROADMAP -->
 ## Roadmap
 
 - [x] Release v0.1.0
 - [ ] Add a 'strict' mode in which types of entries are validated
+- [ ] Make it possible to create a manual validation schema
 - [ ] Improve logging messages for when validation fails
 
 <p align="right">(<a href="#top">back to top</a>)</p>
@@ -183,8 +181,6 @@ Distributed under the MIT License. See `LICENSE` for more information.
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
-
-
 <!-- CONTACT -->
 ## Contact
 
@@ -195,11 +191,3 @@ Project Link: [https://github.com/tq-bit/qache](https://github.com/tq-bit/qache)
 <p align="right">(<a href="#top">back to top</a>)</p>
 
 
-
-<!-- MARKDOWN LINKS & IMAGES -->
-<!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
-
-[size-shield]: https://img.shields.io/bundlephobia/min/@tq-bit/qache?style=plastic
-[license-shield]: https://img.shields.io/github/license/tq-bit/qache?style=plastic
-[license-url]: https://github.com/tq-bit/qache/blob/master/LICENSE
-[commit-shield]: https://img.shields.io/github/last-commit/tq-bit/qache?style=plastic&logo=git
