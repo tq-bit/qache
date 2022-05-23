@@ -60,16 +60,7 @@ export default class Validator<T> {
       return schema;
     };
     const constructArraySchema = (original: T[]) => {
-      const schema: Schema = {
-        type: dataType,
-        properties: {},
-      };
-      Object.keys(original[0]).forEach((key: string) => {
-        (schema.properties as any)[key] = this.constructSchema(
-          (original as any)[0][key],
-        );
-      });
-      return schema;
+      return constructObjectSchema(original[0]);
     };
 
     if (dataType === 'object') {
