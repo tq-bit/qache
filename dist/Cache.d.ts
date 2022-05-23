@@ -1,4 +1,12 @@
 declare type CacheDataType = 'string' | 'number' | 'bigint' | 'boolean' | 'symbol' | 'undefined' | 'object' | 'function' | 'array' | null;
+export interface CacheOptions {
+    cacheKey?: string;
+    entryKey?: string;
+    lifetime?: number;
+    validate?: boolean;
+    debug?: boolean;
+    original?: any;
+}
 interface CacheStats {
     cacheKey: string;
     entryKey: string;
@@ -6,6 +14,7 @@ interface CacheStats {
     datatype: CacheDataType;
     schema: string[];
     count: number;
+    hits: number;
 }
 /**
  * @class
@@ -17,6 +26,7 @@ interface CacheStats {
  * @property    {cacheKey} string A unique identifier for the Cache instance.
  * @property    {entryKey} string The property that defines the cache entry
  * @property    {lifetime} number The entry's lifetime in milliseconds
+ * @property    {original} any An object based on which the cache's validation can be set
  *
  * @example
  * const cache = new Cache<{
@@ -37,14 +47,10 @@ export default class Cache<T> {
     private validate;
     private schema;
     private cacheMap;
+    private validator;
+    private hits;
     private debug;
-    constructor({ cacheKey, entryKey, lifetime, validate, debug, }: {
-        cacheKey?: string;
-        entryKey?: string;
-        lifetime?: number;
-        validate?: boolean;
-        debug?: boolean;
-    });
+    constructor({ cacheKey, entryKey, lifetime, validate, debug, original, }: CacheOptions);
     /**
      * @description Adds an entry to the cache.
      *
@@ -103,13 +109,8 @@ export default class Cache<T> {
      */
     flush(): void;
     private scheduleEntryDeletion;
-    private handleSchemaValidation;
-    private setDatatype;
-    private validateDatatype;
-    private setSchema;
-    private validateSchema;
+    private handleValidation;
     private updateRelatedCacheEntries;
-    private throwError;
     private log;
 }
 export {};

@@ -1,6 +1,6 @@
 {
   "name": "@tq-bit/qache",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "description": "Zero-dependency, lightweight caching module for Node.js and the browser",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",

@@ -11,6 +11,7 @@ var __rest = (this && this.__rest) || function (s, e) {
     return t;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+const Validator_1 = require("./Validator");
 /**
  * @class
  *
@@ -21,6 +22,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
  * @property    {cacheKey} string A unique identifier for the Cache instance.
  * @property    {entryKey} string The property that defines the cache entry
  * @property    {lifetime} number The entry's lifetime in milliseconds
+ * @property    {original} any An object based on which the cache's validation can be set
  *
  * @example
  * const cache = new Cache<{
@@ -34,15 +36,20 @@ Object.defineProperty(exports, "__esModule", { value: true });
  * });
  */
 class Cache {
-    constructor({ cacheKey = 'default', entryKey = 'id', lifetime = 1000 * 60 * 5, validate = true, debug = false, }) {
+    constructor({ cacheKey = 'default', entryKey = 'id', lifetime = 1000 * 60 * 5, validate = false, debug = false, original = null, }) {
         this.cacheKey = cacheKey;
         this.entryKey = entryKey;
         this.lifetime = lifetime;
         this.datatype = null;
+        this.validator = null;
         this.validate = validate;
         this.schema = [];
         this.cacheMap = {};
         this.debug = debug;
+        this.hits = 0;
+        if (original) {
+            this.validator = new Validator_1.default(original);
+        }
     }
     /**
      * @description Adds an entry to the cache.
@@ -59,13 +66,26 @@ class Cache {
      * })
      */
     set(key, value, customLifetime) {
-        if (this.validate) {
-            this.handleSchemaValidation(value);
+        this.hits++;
+        const mustValidate = this.validate;
+        const handleSet = () => {
+            const timeoutKey = this.scheduleEntryDeletion(key, customLifetime);
+            this.cacheMap[key] = { data: value, timeoutKey };
+            if (!Array.isArray(value)) {
+                this.updateRelatedCacheEntries(key, value);
+            }
+        };
+        if (mustValidate) {
+            const isValidEntry = this.handleValidation(value);
+            if (isValidEntry === false) {
+                this.log(`Invalid entry: ${key}`);
+            }
+            else {
+                handleSet();
+            }
         }
-        const timeoutKey = this.scheduleEntryDeletion(key, customLifetime);
-        this.cacheMap[key] = { data: value, timeoutKey };
-        if (!Array.isArray(value)) {
-            this.updateRelatedCacheEntries(key, value);
+        else {
+            handleSet();
         }
     }
     /**
@@ -88,6 +108,7 @@ class Cache {
      */
     get(key) {
         var _a;
+        this.hits++;
         if (this.cacheMap[key]) {
             this.log(`Retrieving key ${key} from cache ${this.cacheKey}`);
             return (_a = this.cacheMap[key]) === null || _a === void 0 ? void 0 : _a.data;
@@ -108,6 +129,7 @@ class Cache {
      * // Returns true
      */
     del(key) {
+        this.hits++;
         this.log(`Deleting key ${key} from cache ${this.cacheKey}`);
         const _a = this.cacheMap, _b = key, value = _a[_b], rest = __rest(_a, [typeof _b === "symbol" ? _b : _b + ""]);
         this.cacheMap = rest;
@@ -129,6 +151,7 @@ class Cache {
             datatype: this.datatype,
             schema: this.schema,
             count: Object.keys(this.cacheMap).length,
+            hits: this.hits,
         };
     }
     /**
@@ -136,6 +159,7 @@ class Cache {
      *              Does not reset schemata and datatype.
      */
     flush() {
+        this.hits = 0;
         this.cacheMap = {};
     }
     scheduleEntryDeletion(key, customLifetime) {
@@ -143,60 +167,24 @@ class Cache {
             this.del(key);
         }, customLifetime || this.lifetime);
     }
-    handleSchemaValidation(value) {
-        if (!this.datatype) {
+    handleValidation(value) {
+        if (this.validator === null) {
             this.log(`Setting datatype to ${typeof value} in cache ${this.cacheKey}`);
-            this.setDatatype(value);
-            this.setSchema(value);
-        }
-        else {
-            this.log(`Validating datatype in cache ${this.cacheKey}`);
-            this.log(value);
-            this.validateDatatype(value);
-            this.validateSchema(value);
-        }
-    }
-    setDatatype(value) {
-        this.datatype = typeof value;
-    }
-    validateDatatype(value) {
-        const hasCorrectType = this.datatype === typeof value;
-        if (!hasCorrectType) {
-            this.throwError(`Attempted to assign ${typeof value} to ${this.datatype} cache`);
-        }
-    }
-    setSchema(value) {
-        if (Array.isArray(value)) {
-            this.schema = Object.keys(value[0]);
-        }
-        else {
-            this.schema = Object.keys(value);
-        }
-    }
-    validateSchema(value) {
-        const validateItemArray = (value) => {
-            value.forEach((entry, index) => {
-                const hasCorrectSchema = Object.keys(entry).every((valueKey) => {
-                    return this.schema.includes(valueKey);
-                });
-                if (!hasCorrectSchema) {
-                    this.throwError(`Schema mismatch for item at position ${index} - [${Object.keys(value[index])}] does not match schema [${this.schema}]`);
-                }
-            });
-        };
-        const validateItem = (value) => {
-            const hasCorrectSchema = Object.keys(value).every((valueKey) => {
-                return this.schema.includes(valueKey);
-            });
-            if (!hasCorrectSchema) {
-                this.throwError(`Schema mismatch for item - [${Object.keys(value)}] does not match schema [${this.schema}]`);
+            if (Array.isArray(value)) {
+                this.validator = new Validator_1.default(value[0]);
             }
-        };
-        if (Array.isArray(value)) {
-            validateItemArray(value);
+            else {
+                this.validator = new Validator_1.default(value);
+            }
+            return true;
         }
         else {
-            validateItem(value);
+            if (Array.isArray(value)) {
+                return this.validator.validateList(value);
+            }
+            else {
+                return this.validator.validate(value);
+            }
         }
     }
     updateRelatedCacheEntries(key, value) {
@@ -226,9 +214,6 @@ class Cache {
                 this.cacheMap[cacheMapKey] = Object.assign(Object.assign({}, this.cacheMap[cacheMapKey]), { data: [...entries] });
             }
         }
-    }
-    throwError(message) {
-        throw new Error(`Error in cache ${this.cacheKey}: \n ${message}`);
     }
     log(message) {
         if (this.debug === true) {
