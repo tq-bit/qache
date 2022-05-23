@@ -1,3 +1,5 @@
+import Validator from './Validator';
+
 type CacheDataType =
   | 'string'
   | 'number'
@@ -55,6 +57,7 @@ export default class Cache<T> {
       timeoutKey: ReturnType<typeof setTimeout>;
     };
   };
+  private validator: Validator<T> | null;
   private hits: number;
   private debug: boolean;
 
@@ -75,6 +78,7 @@ export default class Cache<T> {
     this.entryKey = entryKey;
     this.lifetime = lifetime;
     this.datatype = null;
+    this.validator = null;
     this.validate = validate;
     this.schema = [];
     this.cacheMap = {};
@@ -196,75 +200,19 @@ export default class Cache<T> {
   }
 
   private handleSchemaValidation(value: T | T[]) {
-    if (!this.datatype) {
+    if (this.validator === null) {
       this.log(`Setting datatype to ${typeof value} in cache ${this.cacheKey}`);
-      this.setDatatype(value);
-      this.setSchema(value);
-    } else {
-      this.log(`Validating datatype in cache ${this.cacheKey}`);
-      this.log(value);
-      this.validateDatatype(value);
-      this.validateSchema(value);
-    }
-  }
-
-  private setDatatype(value: T | T[]) {
-    this.datatype = typeof value;
-  }
-
-  private validateDatatype(value: T | T[]) {
-    const hasCorrectType: boolean = this.datatype === typeof value;
-    if (!hasCorrectType) {
-      this.throwError(
-        `Attempted to assign ${typeof value} to ${this.datatype} cache`,
-      );
-    }
-  }
-
-  private setSchema(value: T | T[]) {
-    if (Array.isArray(value)) {
-      this.schema = Object.keys(value[0]);
-    } else {
-      this.schema = Object.keys(value);
-    }
-  }
-
-  private validateSchema(value: T | T[]) {
-    const validateItemArray = (value: T[]) => {
-      value.forEach((entry, index) => {
-        const hasCorrectSchema: boolean = Object.keys(entry).every(
-          (valueKey) => {
-            return this.schema.includes(valueKey);
-          },
-        );
-        if (!hasCorrectSchema) {
-          this.throwError(
-            `Schema mismatch for item at position ${index} - [${Object.keys(
-              value[index],
-            )}] does not match schema [${this.schema}]`,
-          );
-        }
-      });
-    };
-
-    const validateItem = (value: T) => {
-      const hasCorrectSchema: boolean = Object.keys(value).every((valueKey) => {
-        return this.schema.includes(valueKey);
-      });
-
-      if (!hasCorrectSchema) {
-        this.throwError(
-          `Schema mismatch for item - [${Object.keys(
-            value,
-          )}] does not match schema [${this.schema}]`,
-        );
+      if (Array.isArray(value)) {
+        this.validator = new Validator<T>(value[0]);
+      } else {
+        this.validator = new Validator<T>(value);
       }
-    };
-
-    if (Array.isArray(value)) {
-      validateItemArray(value);
     } else {
-      validateItem(value);
+      if (Array.isArray(value)) {
+        this.validator.validateList(value);
+      } else {
+        this.validator.validate(value);
+      }
     }
   }
 

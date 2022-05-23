@@ -13,9 +13,7 @@ import {
   payloadUserThree,
   payloadUserTwo,
   payloadUsers,
-  payloadUsersWithAdditionalProperty,
   urlUserOne,
-  payloadWithAdditionalProperty,
   urlUserThree,
   urlUserTwo,
   urlUsers,
@@ -38,41 +36,6 @@ describe('Cache class', () => {
     cache.set(urlUserOne, { ...payloadUserOne });
     cache.del(urlUserOne);
     expect(cache.get(urlUserOne)).to.be.undefined;
-  });
-
-  it('Should create a data-type and a schema when the first entry is added', () => {
-    const cache = new Cache(options);
-    cache.set(urlUserOne, { ...payloadUserOne });
-    expect(cache.stats().datatype).to.equal('object');
-    expect(cache.stats().schema).to.deep.equal([
-      'id',
-      'firstName',
-      'secondName',
-    ]);
-  });
-
-  it('Should throw an error if an entry is to be added that has too many properties', () => {
-    const cache = new Cache(options);
-    cache.set(urlUserOne, { ...payloadUserOne });
-    expect(() =>
-      cache.set('invalid', payloadWithAdditionalProperty),
-    ).to.throw();
-    expect(cache.get('invalid')).to.be.undefined;
-  });
-
-  it('Should throw an error if a list of entries is to be added that has too many properties', () => {
-    const cache = new Cache(options);
-    cache.set(urlUserOne, { ...payloadUserOne });
-    expect(() =>
-      cache.set(urlUsers, payloadUsersWithAdditionalProperty),
-    ).to.throw();
-    expect(cache.get(urlUsers)).to.be.undefined;
-  });
-
-  it('Should throw an error if an unknown datatype is added to a cache', () => {
-    const cache = new Cache(options);
-    cache.set(urlUserOne, { ...payloadUserOne });
-    expect(() => cache.set('invalid', 'invalid')).to.throw();
   });
 
   it('Should add a related cache entry if a new, single entry is added', () => {
