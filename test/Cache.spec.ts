@@ -88,11 +88,42 @@ describe('Cache class', () => {
   });
 
   describe('Schema validation', () => {
-    it('Should validate each payload against its schema, if validation is enabled', () => {
+    it('Should activate a new validator instance when validation is enabled and an object item is passed in first', () => {
       const cache = new Cache({ ...options, validate: true });
       cache.set(urlUserOne, { ...payloadUserOne });
       cache.set(urlUserTwo, { ...payloadUserTwo });
       cache.set(urlUsers, [...payloadUsers]);
+      expect(cache.get(urlUserOne)).to.deep.equal(payloadUserOne);
+      expect(cache.get(urlUserTwo)).to.deep.equal(payloadUserTwo);
+      expect(cache.get(urlUsers)).to.deep.include(payloadUserOne);
+    });
+
+    it('Should activate a new validator instance when when validation is enabled and an array item is passed in first', () => {
+      const cache = new Cache({ ...options, validate: true });
+      cache.set(urlUsers, [...payloadUsers]);
+      cache.set(urlUserOne, { ...payloadUserOne });
+      cache.set(urlUserTwo, { ...payloadUserTwo });
+      cache.set('invalid', { ...payloadWithAdditionalProperty });
+      expect(cache.get(urlUsers)).to.deep.include(payloadUserOne);
+      expect(cache.get(urlUserOne)).to.deep.equal(payloadUserOne);
+      expect(cache.get(urlUserTwo)).to.deep.equal(payloadUserTwo);
+      expect(cache.get('invalid')).to.be.undefined;
+    });
+
+    it('Should activate a new validator instance when validation is enabled and an object item is passed in to the constructor', () => {
+      const cache = new Cache({
+        ...options,
+        validate: true,
+        original: payloadUserOne,
+      });
+      cache.set(urlUsers, [...payloadUsers]);
+      cache.set(urlUserOne, { ...payloadUserOne });
+      cache.set(urlUserTwo, { ...payloadUserTwo });
+      cache.set('invalid', { ...payloadWithAdditionalProperty });
+      expect(cache.get(urlUsers)).to.deep.include(payloadUserOne);
+      expect(cache.get(urlUserOne)).to.deep.equal(payloadUserOne);
+      expect(cache.get(urlUserTwo)).to.deep.equal(payloadUserTwo);
+      expect(cache.get('invalid')).to.be.undefined;
     });
 
     it('Should not add or update an entry if it does not match the schema', () => {
