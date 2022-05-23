@@ -38,13 +38,12 @@ npm install @tq-bit/qache
 <!-- USAGE EXAMPLES -->
 ## Usage
 
-Besides caching single values, it also needed to keep related entries in sync. As a consequence, it comes with a few opinionated (but optional) default features:
+Besides caching single values, Qache also needed to keep related entries in sync while ensuring type safety. As a consequence, it comes with a few opinionated (but optional) features:
 
-- **One cache per API resource** -> Each endpoint an application targets must have its own Qache instance
-- **Schema validation** -> The first entry that is added into the cache defines the schema for other entries
-- **Default TTL** -> Default TTL for entries is set to 15 minutes
-- **Type safety** -> You can use Typescript Generics to improve Qache's intellisense
-- **Automatic cache updates** -> When a single entry is created or updated by its key, related entries are automatically updated as well
+- **One cache per API resource** -> Each cache holds a single validation schema. This implies: Each resource an application targets must have its own Qache instance. This goes for both databases and APIs.
+- **Schema validation** -> The first entry that is added into the cache defines the schema for other entries.
+- **Type safety** -> You can use Typescript Generics to improve intellisense for Qache
+- **Automatic cache updates** -> When a single entry is created or updated by its key, Qache will try to update related entries (= Array items in the same cache) as well
 
 ### Configuration API
 
@@ -68,9 +67,9 @@ Lifetime of a single cache entry in MS
 
 #### `validate` {bool}
 
-Whether or not to validate entries that are added to the cache
+Whether or not to validate entries that are added to the cache. Set to `true` to enable the `Validator` class on the created cache instance.
 
-**Default**: `true`
+**Default**: `false`
 
 #### `debug` {bool}
 
@@ -87,7 +86,7 @@ This is the default configuration used by the Qache constructor:
   cacheKey = 'default',
   entryKey = 'id',
   lifetime = 1000 * 60 * 5,
-  validate = true,
+  validate = false,
   debug = false,
 }
 ```
@@ -150,8 +149,6 @@ cache.set('api/posts/', [
 ]);
 ```
 
-> The first entry's structure will be used to validate all further entries. If you assign an array if items, the structure of the first entry will be used for validation.
-
 ### Automatic cache updates
 
 When a single entry is created or updated, all related cached entries are automatically updated as well. Qache will iterate through all array-like entries in the cache, try to find matches and update them accordingly. It works like this:
@@ -168,8 +165,8 @@ Deleting entries works analogous. If a single entry is removed from the cache, a
 ## Roadmap
 
 - [x] Release v0.1.0
-- [ ] Add a 'strict' mode in which types of entries are validated
-- [ ] Make it possible to create a manual validation schema
+- [x] Add a 'strict' mode in which types of entries are validated
+- [x] Make it possible to create a manual validation schema
 - [ ] Improve logging messages for when validation fails
 
 <p align="right">(<a href="#top">back to top</a>)</p>
