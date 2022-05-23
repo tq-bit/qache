@@ -16,7 +16,7 @@
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
-Qache was created to provide secure and predictable HTTP - caching for one of my Vue apps.
+Qache was created to provide secure and predictable HTTP - caching for my Vue apps. It can be used as a normal Javascript cache. Its however lies in its ability to update collections of items if a single item changes. This approach was heavily inspired by [Apollo's caching system](https://www.apollographql.com/docs/react/data/caching/).
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
@@ -47,35 +47,41 @@ Besides caching single values, Qache also needed to keep related entries in sync
 
 ### Configuration API
 
-#### `cacheKey` {string}
+#### `cacheKey` {string} (optional)
 
 Name of the cache instance. Currently only useful for debugging.
 
 **Default**: `'default'`
 
-#### `cacheKey` {string}
+#### `cacheKey` {string} (optional)
 
 Name of the property Qache uses to try and match entries for [automatic cache updates](#automatic-cache-updates)
 
 **Default**: `'id'`
 
-#### `lifetime` {number}
+#### `lifetime` {number} (optional)
 
 Lifetime of a single cache entry in MS
 
 **Default**: `1000 * 60 * 15 (= 5 minutes)`
 
-#### `validate` {bool}
+#### `validate` {bool} (optional)
 
 Whether or not to validate entries that are added to the cache. Set to `true` to enable the `Validator` class on the created cache instance.
 
 **Default**: `false`
 
-#### `debug` {bool}
+#### `debug` {bool} (optional)
 
 Set to `true` to enable verbose logging
 
 **Default**: `false`
+
+#### `original` {object|array} (optional)
+
+An object or array of objects to create an initial validator instance.
+
+**Default**: `null`
 
 #### Default configuration example
 
@@ -88,6 +94,7 @@ This is the default configuration used by the Qache constructor:
   lifetime = 1000 * 60 * 5,
   validate = false,
   debug = false,
+  original = null
 }
 ```
 
@@ -119,11 +126,21 @@ const typedCache = new Cache<Post>({
   entryKey: 'id',
   lifetime: 1000 * 60 * 5
 });
+
+// If a cache object is available during cache creation, it can be passed in as an 'original'
+const typedCacheWithOriginal = new Cache<Post>({
+  cacheKey: 'posts',
+  entryKey: 'id',
+  lifetime: 1000 * 60 * 5,
+  original: { id: 3, title: 'Hello', body: 'World' },
+});
 ```
 
 ### Add and update entries to/in the cache
 
-Each cache entry is saved a simple Javascript Object. It is identified by a `key` and has a dedicated `timeout` instance. This prevents the process from running through every entry to check for individual timeouts.
+Each cache entry is saved a simple Javascript Object. It is identified by a `key` and has a dedicated `timeout` instance.
+
+> Note: This approach might be replaced by a single check period to remove redundant entries.
 
 New entries can be created the same way updates are done.
 
@@ -167,7 +184,7 @@ Deleting entries works analogous. If a single entry is removed from the cache, a
 - [x] Release v0.1.0
 - [x] Add a 'strict' mode in which types of entries are validated
 - [x] Make it possible to create a manual validation schema
-- [ ] Improve logging messages for when validation fails
+- [ ] Improve logging messages for when validation fails (= for detailed validation)
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
