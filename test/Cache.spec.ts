@@ -7,45 +7,19 @@ const options = {
   lifetime: 5000,
 };
 
-const urlUsers = '/api/v1/users';
-const urlUserOne = '/api/v1/users/1';
-const urlUserTwo = '/api/v1/users/2';
-const urlUserThree = '/api/v1/users/3';
-
-const payloadUserOne = {
-  id: '1',
-  firstName: 'John',
-  secondName: 'Smith',
-};
-const payloadUserTwo = {
-  id: '2',
-  firstName: 'Jane',
-  secondName: 'Doe',
-};
-const payloadUserThree = {
-  id: '3',
-  firstName: 'Jack',
-  secondName: 'Miller',
-};
-const payloadWithAdditionalProperty = {
-  id: '4',
-  firstName: 'Jack',
-  secondName: 'Turpin',
-  familyName: 'Miller',
-};
-
-const payloadUsers = [{ ...payloadUserOne }, { ...payloadUserTwo }];
-const payloadUsersWithAdditionalProperty = [
-  { ...payloadUserOne },
-  { ...payloadWithAdditionalProperty },
-  { ...payloadUserThree },
-];
-
-const payloadUserOneUpdated = {
-  id: '1',
-  firstName: 'John',
-  secondName: 'Doe',
-};
+import {
+  payloadUserOne,
+  payloadUserOneUpdated,
+  payloadUserThree,
+  payloadUserTwo,
+  payloadUsers,
+  payloadUsersWithAdditionalProperty,
+  urlUserOne,
+  payloadWithAdditionalProperty,
+  urlUserThree,
+  urlUserTwo,
+  urlUsers,
+} from './data/users.data';
 
 describe('Cache class', () => {
   it('Should create a new instance of Cache', () => {
