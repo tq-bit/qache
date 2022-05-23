@@ -33,6 +33,19 @@ Run the following command in a project of your choice:
 npm install @tq-bit/qache
 ```
 
+You can then import it into your project:
+
+```js
+// Using ES6 modules:
+import { Qache } from '@tq-bit/qache';
+
+// Using CommonJS:
+const Qache = require('@tq-bit/qache')['default'];
+
+// You can then start using it in your code:
+const cache = new Qache({cacheKey: 'default'});
+```
+
 <p align="right">(<a href="#top">back to top</a>)</p>
 
 <!-- USAGE EXAMPLES -->
