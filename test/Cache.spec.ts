@@ -95,7 +95,7 @@ describe('Cache class', () => {
       cache.set(urlUsers, [...payloadUsers]);
     });
 
-    it('Should not an entry if it does not match the schema', () => {
+    it('Should not add or update an entry if it does not match the schema', () => {
       const cache = new Cache({ ...options, validate: true });
       cache.set(urlUserOne, { ...payloadUserOne });
       cache.set('invalid', { ...payloadWithAdditionalProperty });

@@ -266,10 +266,6 @@ export default class Cache<T> {
     }
   }
 
-  private throwError(message: string) {
-    throw new Error(`Error in cache ${this.cacheKey}: \n ${message}`);
-  }
-
   private log(message: any) {
     if (this.debug === true) {
       console.dir(message);
