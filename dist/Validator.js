@@ -20,7 +20,6 @@ class Validator {
         const dataType = this.getDataType(original);
         const constructObjectSchema = (original) => {
             const localType = (() => {
-                // Overwrite array type if the first item to be passed in is an array
                 const isArrayOnFirstLevel = dataType === 'array' && level === 0;
                 if (isArrayOnFirstLevel) {
                     return 'object';
