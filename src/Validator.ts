@@ -21,12 +21,10 @@ export interface Schema {
 }
 
 export default class Validator<T> {
-  private original: T;
   private schema: Schema;
   private method: ValidationMethod;
 
   constructor(original: T, method?: ValidationMethod) {
-    this.original = original;
     this.method = method || 'quick';
     this.schema = this.constructSchema(original);
   }
@@ -49,7 +47,9 @@ export default class Validator<T> {
 
     const constructObjectSchema = (original: T) => {
       const localType = (() => {
-        if (dataType === 'array' && level === 0) {
+        // Overwrite array type if the first item to be passed in is an array
+        const isArrayOnFirstLevel = dataType === 'array' && level === 0;
+        if (isArrayOnFirstLevel) {
           return 'object';
         }
         return dataType;
