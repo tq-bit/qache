@@ -20,6 +20,17 @@ describe('Validator class', () => {
     expect(validator.getSchema()).to.deep.equal(userSchema);
   });
 
+  it('Should create a schema from a Javascript array passed into it', () => {
+    const validator = new Validator([
+      { ...payloadUserOne },
+      { ...payloadUserTwo },
+    ]);
+    expect(validator.getSchema()).to.deep.equal({
+      ...userSchema,
+      type: 'array',
+    });
+  });
+
   it('Should return true if two distinct object have the same structure', () => {
     const validator = new Validator(payloadUserOne, 'quick');
     expect(validator.validate(payloadUserTwo)).to.be.true;

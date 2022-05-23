@@ -18,6 +18,7 @@ export interface CacheOptions {
   lifetime?: number;
   validate?: boolean;
   debug?: boolean;
+  original?: any;
 }
 
 interface CacheStats {
@@ -40,6 +41,7 @@ interface CacheStats {
  * @property    {cacheKey} string A unique identifier for the Cache instance.
  * @property    {entryKey} string The property that defines the cache entry
  * @property    {lifetime} number The entry's lifetime in milliseconds
+ * @property    {original} any An object based on which the cache's validation can be set
  *
  * @example
  * const cache = new Cache<{
@@ -75,6 +77,7 @@ export default class Cache<T> {
     lifetime = 1000 * 60 * 5,
     validate = false,
     debug = false,
+    original = null,
   }: CacheOptions) {
     this.cacheKey = cacheKey;
     this.entryKey = entryKey;
@@ -86,6 +89,9 @@ export default class Cache<T> {
     this.cacheMap = {};
     this.debug = debug;
     this.hits = 0;
+    if (original) {
+      this.validator = new Validator(original);
+    }
   }
 
   /**
@@ -104,15 +110,24 @@ export default class Cache<T> {
    */
   public set(key: string, value: T | T[], customLifetime?: number) {
     this.hits++;
-    if (this.validate) {
-      this.handleSchemaValidation(value);
-    }
+    const mustValidate = this.validate;
+    const handleSet = () => {
+      const timeoutKey = this.scheduleEntryDeletion(key, customLifetime);
+      this.cacheMap[key] = { data: value, timeoutKey };
+      if (!Array.isArray(value)) {
+        this.updateRelatedCacheEntries(key, value);
+      }
+    };
 
-    const timeoutKey = this.scheduleEntryDeletion(key, customLifetime);
-    this.cacheMap[key] = { data: value, timeoutKey };
-
-    if (!Array.isArray(value)) {
-      this.updateRelatedCacheEntries(key, value);
+    if (mustValidate) {
+      const isValidEntry = this.handleValidation(value);
+      if (isValidEntry === false) {
+        this.log(`Invalid entry: ${key}`);
+      } else {
+        handleSet();
+      }
+    } else {
+      handleSet();
     }
   }
 
@@ -201,7 +216,7 @@ export default class Cache<T> {
     }, customLifetime || this.lifetime);
   }
 
-  private handleSchemaValidation(value: T | T[]) {
+  private handleValidation(value: T | T[]) {
     if (this.validator === null) {
       this.log(`Setting datatype to ${typeof value} in cache ${this.cacheKey}`);
       if (Array.isArray(value)) {
@@ -209,11 +224,12 @@ export default class Cache<T> {
       } else {
         this.validator = new Validator<T>(value);
       }
+      return true;
     } else {
       if (Array.isArray(value)) {
-        this.validator.validateList(value);
+        return this.validator.validateList(value);
       } else {
-        this.validator.validate(value);
+        return this.validator.validate(value);
       }
     }
   }
