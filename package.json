@@ -5,8 +5,8 @@
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
-    "release": "npm run pre-release && npm version minor --no-git-tag-version && npm publish --access public",
-    "release:patch": "npm run pre-release && npm version patch --no-git-tag-version && npm publish --access public",
+    "release": "npm run pre-release && npm version patch --no-git-tag-version && npm publish --access public",
+    "release:minor": "npm run pre-release && npm version minor --no-git-tag-version && npm publish --access public",
     "release:major": "npm run pre-release && npm version major --no-git-tag-version && npm publish --access public",
     "pre-release": "npm run lint && npm run test && npm run build && npm run commit",
     "lint": "eslint ./src/** --fix",
