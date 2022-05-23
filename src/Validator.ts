@@ -44,17 +44,25 @@ export default class Validator<T> {
     });
   }
 
-  private constructSchema(original: T | T[]): Schema {
+  private constructSchema(original: T | T[], level: number = 0): Schema {
     const dataType = this.getDataType(original);
 
     const constructObjectSchema = (original: T) => {
+      const localType = (() => {
+        console.log(level);
+        if (dataType === 'array' && level === 0) {
+          return 'object';
+        }
+        return dataType;
+      })();
       const schema: Schema = {
-        type: dataType,
+        type: localType,
         properties: {},
       };
       Object.keys(original).forEach((key: string) => {
         (schema.properties as any)[key] = this.constructSchema(
           (original as any)[key],
+          level + 1,
         );
       });
       return schema;

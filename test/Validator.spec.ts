@@ -25,9 +25,10 @@ describe('Validator class', () => {
       { ...payloadUserOne },
       { ...payloadUserTwo },
     ]);
+    console.log(validator.getSchema());
     expect(validator.getSchema()).to.deep.equal({
       ...userSchema,
-      type: 'array',
+      type: 'object',
     });
   });
 
