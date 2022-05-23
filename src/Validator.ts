@@ -49,7 +49,6 @@ export default class Validator<T> {
 
     const constructObjectSchema = (original: T) => {
       const localType = (() => {
-        console.log(level);
         if (dataType === 'array' && level === 0) {
           return 'object';
         }

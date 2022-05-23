@@ -26,6 +26,25 @@ export const userSchema = {
         },
       },
     },
+    items: {
+      type: 'array',
+      properties: {
+        id: {
+          type: 'number',
+        },
+        payments: {
+          type: 'array',
+          properties: {
+            id: {
+              type: 'number',
+            },
+            amount: {
+              type: 'number',
+            },
+          },
+        },
+      },
+    },
   },
 };
 
@@ -39,6 +58,21 @@ export const payloadUserOne = {
       street: 'Street 1',
     },
   ],
+  items: [
+    {
+      id: 1,
+      payments: [
+        {
+          id: 1,
+          amount: 100,
+        },
+        {
+          id: 2,
+          amount: 200,
+        },
+      ],
+    },
+  ],
 };
 export const payloadUserTwo = {
   id: '2',
@@ -48,6 +82,21 @@ export const payloadUserTwo = {
     {
       id: 2,
       street: 'Street 2',
+    },
+  ],
+  items: [
+    {
+      id: 1,
+      payments: [
+        {
+          id: 1,
+          amount: 100,
+        },
+        {
+          id: 2,
+          amount: 200,
+        },
+      ],
     },
   ],
 };
@@ -61,6 +110,21 @@ export const payloadUserThree = {
       street: 'Street 3',
     },
   ],
+  items: [
+    {
+      id: 1,
+      payments: [
+        {
+          id: 1,
+          amount: 100,
+        },
+        {
+          id: 2,
+          amount: 200,
+        },
+      ],
+    },
+  ],
 };
 export const payloadWithAdditionalProperty = {
   id: '4',
@@ -71,6 +135,21 @@ export const payloadWithAdditionalProperty = {
     {
       id: 4,
       street: 'Street 4',
+    },
+  ],
+  items: [
+    {
+      id: 1,
+      payments: [
+        {
+          id: 1,
+          amount: 100,
+        },
+        {
+          id: 2,
+          amount: 200,
+        },
+      ],
     },
   ],
 };
@@ -86,4 +165,25 @@ export const payloadUserOneUpdated = {
   id: '1',
   firstName: 'John',
   secondName: 'Doe',
+  adresses: [
+    {
+      id: 2,
+      street: 'Street 2',
+    },
+  ],
+  items: [
+    {
+      id: 1,
+      payments: [
+        {
+          id: 1,
+          amount: 100,
+        },
+        {
+          id: 2,
+          amount: 200,
+        },
+      ],
+    },
+  ],
 };
