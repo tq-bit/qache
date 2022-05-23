@@ -1,10 +1,12 @@
 import Cache from '../src/index';
+import { CacheOptions } from '../src/Cache';
 import { expect } from 'chai';
 
-const options = {
+const options: CacheOptions = {
   cacheKey: 'default',
   entryKey: 'id',
   lifetime: 5000,
+  validate: false,
 };
 
 import {

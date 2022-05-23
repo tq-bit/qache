@@ -12,6 +12,14 @@ type CacheDataType =
   | 'array'
   | null;
 
+export interface CacheOptions {
+  cacheKey?: string;
+  entryKey?: string;
+  lifetime?: number;
+  validate?: boolean;
+  debug?: boolean;
+}
+
 interface CacheStats {
   cacheKey: string;
   entryKey: string;
@@ -65,15 +73,9 @@ export default class Cache<T> {
     cacheKey = 'default',
     entryKey = 'id',
     lifetime = 1000 * 60 * 5,
-    validate = true,
+    validate = false,
     debug = false,
-  }: {
-    cacheKey?: string;
-    entryKey?: string;
-    lifetime?: number;
-    validate?: boolean;
-    debug?: boolean;
-  }) {
+  }: CacheOptions) {
     this.cacheKey = cacheKey;
     this.entryKey = entryKey;
     this.lifetime = lifetime;
