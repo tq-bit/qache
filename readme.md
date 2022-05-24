@@ -55,7 +55,7 @@ Run the following command in a project of your choice:
 npm install @tq-bit/qache
 ```
 
-You can then import it into your project:
+You can then import the module into your project:
 
 ```js
 // Using ES6 modules:
