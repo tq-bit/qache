@@ -7,6 +7,8 @@ import {
   payloadUserOne,
   payloadUserTwo,
   payloadWithAdditionalProperty,
+  payloadUserInDifferentOrder,
+  payloadUserWrongType,
 } from './data/users.data';
 
 describe('Validator class', () => {
@@ -31,13 +33,37 @@ describe('Validator class', () => {
     });
   });
 
-  it('Should return true if two distinct object have the same structure', () => {
-    const validator = new Validator(payloadUserOne, 'quick');
-    expect(validator.validate(payloadUserTwo)).to.be.true;
+  describe('Quick validation', () => {
+    it('Should return true if two distinct object have the same structure', () => {
+      const validator = new Validator(payloadUserOne, 'quick');
+      expect(validator.validate(payloadUserTwo)).to.be.true;
+    });
+
+    it('Should return false if two distinct object have a different structure', () => {
+      const validator = new Validator(payloadUserOne, 'quick');
+      expect(validator.validate(payloadWithAdditionalProperty)).to.be.false;
+    });
   });
 
-  it('Should return false if two distinct object have a different structure', () => {
-    const validator = new Validator(payloadUserOne, 'quick');
-    expect(validator.validate(payloadWithAdditionalProperty)).to.be.false;
+  describe('Deep validation', () => {
+    it('Should return true if two distinct objects have the same structure', () => {
+      const validator = new Validator(payloadUserOne, 'deep');
+      expect(validator.validate(payloadUserTwo)).to.be.true;
+    });
+
+    it('Should return true if two distinct objects have the same structure, but in a different order', () => {
+      const validator = new Validator(payloadUserOne, 'deep');
+      expect(validator.validate(payloadUserInDifferentOrder)).to.be.true;
+    });
+
+    it('Should return false if two distinct objects have a different structure', () => {
+      const validator = new Validator(payloadUserOne, 'deep');
+      expect(validator.validate(payloadWithAdditionalProperty)).to.be.false;
+    });
+
+    it("Should return false if at least one of the object's properties has the incorrect type", () => {
+      const validator = new Validator(payloadUserOne, 'deep');
+      expect(validator.validate(payloadUserWrongType)).to.be.false;
+    });
   });
 });

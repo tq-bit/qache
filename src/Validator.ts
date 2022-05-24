@@ -34,6 +34,9 @@ export default class Validator<T> {
     if (this.method === 'quick') {
       return this.quickSchemaValidation(this.schema, localSchema);
     }
+    if (this.method === 'deep') {
+      return this.deepSchemaValidation(this.schema, localSchema);
+    }
   }
 
   public validateList(data: T[]) {
@@ -84,6 +87,50 @@ export default class Validator<T> {
 
   private quickSchemaValidation(schemaOne: Schema, schemaTwo: Schema) {
     return JSON.stringify(schemaOne) === JSON.stringify(schemaTwo);
+  }
+
+  private deepSchemaValidation(
+    schemaOne: Schema,
+    schemaTwo: Schema,
+    level: number = 0,
+  ): boolean {
+    const errors: { title: string; text: string }[] = [];
+    const schemaOneKeys = Object.keys(schemaOne);
+    const schemaTwoKeys = Object.keys(schemaTwo);
+    if (schemaOneKeys.length !== schemaTwoKeys.length) {
+      errors.push({
+        title: `Schema keys do not match at level ${level}`,
+        text: `${schemaOneKeys} !== ${schemaTwoKeys}`,
+      });
+      return false;
+    }
+
+    for (const key of schemaOneKeys) {
+      const schemaOneValue = (schemaOne as any)[key];
+      const schemaTwoValue = (schemaTwo as any)[key];
+      if (schemaOneValue.type !== schemaTwoValue.type) {
+        errors.push({
+          title: `Schema types do not match at level ${level} for key ${key}`,
+          text: `${schemaOneValue.type} !== ${schemaTwoValue.type}`,
+        });
+      }
+    }
+
+    if (schemaOne.properties) {
+      return this.deepSchemaValidation(
+        (schemaOne as any).properties,
+        (schemaTwo as any).properties,
+        level + 1,
+      );
+    }
+    if (errors.length > 0) {
+      errors.forEach((error) => {
+        console.error('\x1b[31m', error.title);
+        console.error('\x1b[31m', `↪ ${error.text}`);
+      });
+      return false;
+    }
+    return true;
   }
 
   private getDataType(original: T | T[]): ValidSchemaType {

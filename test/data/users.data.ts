@@ -153,6 +153,59 @@ export const payloadWithAdditionalProperty = {
     },
   ],
 };
+export const payloadUserInDifferentOrder = {
+  id: '5',
+  secondName: 'Jones',
+  firstName: 'Albert',
+  adresses: [
+    {
+      street: 'Street 5',
+      id: 5,
+    },
+  ],
+  items: [
+    {
+      payments: [
+        {
+          id: 1,
+          amount: 100,
+        },
+        {
+          amount: 200,
+          id: 2,
+        },
+      ],
+      id: 1,
+    },
+  ],
+};
+
+export const payloadUserWrongType = {
+  id: 5,
+  secondName: 'Jones',
+  firstName: false,
+  adresses: [
+    {
+      street: 'Street 5',
+      id: 5,
+    },
+  ],
+  items: [
+    {
+      payments: [
+        {
+          id: 1,
+          amount: '100',
+        },
+        {
+          amount: 200,
+          id: true,
+        },
+      ],
+      id: 1,
+    },
+  ],
+};
 
 export const payloadUsers = [{ ...payloadUserOne }, { ...payloadUserTwo }];
 export const payloadUsersWithAdditionalProperty = [
