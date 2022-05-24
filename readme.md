@@ -9,6 +9,7 @@
   <div align="center">
     <img alt="License" src="https://img.shields.io/github/license/tq-bit/qache?style=plastic"/>
     <img alt="Size" src="https://img.shields.io/bundlephobia/min/@tq-bit/qache?style=plastic">
+    <img alt="npm" src="https://img.shields.io/npm/dm/@tq-bit/qache?style=plastic&logo=npm">
     <img alt="GitHub last commit" src="https://img.shields.io/github/last-commit/tq-bit/qache?style=plastic&logo=git"/>
   </div>
 </div>
