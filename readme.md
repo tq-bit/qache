@@ -59,7 +59,7 @@ You can then import it into your project:
 
 ```js
 // Using ES6 modules:
-import { Qache } from '@tq-bit/qache';
+import Qache from '@tq-bit/qache';
 
 // Using CommonJS:
 const Qache = require('@tq-bit/qache')['default'];
