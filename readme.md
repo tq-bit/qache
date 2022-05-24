@@ -13,6 +13,28 @@
   </div>
 </div>
 
+## Table of contents
+
+- [Table of contents](#table-of-contents)
+- [About The Project](#about-the-project)
+- [Getting Started](#getting-started)
+  - [Installation](#installation)
+- [Usage](#usage)
+  - [Default configuration example](#default-configuration-example)
+  - [Public API](#public-api)
+    - [`cacheKey` {string} (optional)](#cachekey-string-optional)
+    - [`cacheKey` {string} (optional)](#cachekey-string-optional-1)
+    - [`lifetime` {number} (optional)](#lifetime-number-optional)
+    - [`validate` {bool} (optional)](#validate-bool-optional)
+    - [`debug` {bool} (optional)](#debug-bool-optional)
+    - [`original` {object|array} (optional)](#original-objectarray-optional)
+  - [Create a new cache instance](#create-a-new-cache-instance)
+  - [Add and update entries to/in the cache](#add-and-update-entries-toin-the-cache)
+  - [Automatic cache updates](#automatic-cache-updates)
+- [Roadmap](#roadmap)
+- [License](#license)
+- [Contact](#contact)
+
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
@@ -58,7 +80,22 @@ Besides caching single values, Qache also needed to keep related entries in sync
 - **Type safety** -> You can use Typescript Generics to improve intellisense for Qache
 - **Automatic cache updates** -> When a single entry is created or updated by its key, Qache will try to update related entries (= Array items in the same cache) as well
 
-### Configuration API
+### Default configuration example
+
+This is the default configuration used by the Qache constructor. I'd recommend you give each cache at least a unique `cacheKey` property.
+
+```ts
+{
+  cacheKey = 'default',
+  entryKey = 'id',
+  lifetime = 1000 * 60 * 5,
+  validate = false,
+  debug = false,
+  original = null
+}
+```
+
+### Public API
 
 #### `cacheKey` {string} (optional)
 
@@ -95,21 +132,6 @@ Set to `true` to enable verbose logging
 An object or array of objects to create an initial validator instance.
 
 **Default**: `null`
-
-#### Default configuration example
-
-This is the default configuration used by the Qache constructor:
-
-```ts
-{
-  cacheKey = 'default',
-  entryKey = 'id',
-  lifetime = 1000 * 60 * 5,
-  validate = false,
-  debug = false,
-  original = null
-}
-```
 
 ### Create a new cache instance
 
@@ -197,7 +219,8 @@ Deleting entries works analogous. If a single entry is removed from the cache, a
 - [x] Release v0.1.0
 - [x] Add a 'strict' mode in which types of entries are validated
 - [x] Make it possible to create a manual validation schema
-- [ ] Improve logging messages for when validation fails (= for detailed validation)
+- [ ] Add a more complex validation algorithm
+- [ ] Improve logging messages for when validation fails (requires complex validation logic)
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
