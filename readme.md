@@ -21,6 +21,8 @@
   - [Installation](#installation)
 - [Usage](#usage)
   - [Default configuration example](#default-configuration-example)
+  - [Create a new cache instance](#create-a-new-cache-instance)
+  - [Add and update entries to/in the cache](#add-and-update-entries-toin-the-cache)
   - [Public API](#public-api)
     - [`cacheKey` {string} (optional)](#cachekey-string-optional)
     - [`cacheKey` {string} (optional)](#cachekey-string-optional-1)
@@ -28,8 +30,6 @@
     - [`validate` {bool} (optional)](#validate-bool-optional)
     - [`debug` {bool} (optional)](#debug-bool-optional)
     - [`original` {object|array} (optional)](#original-objectarray-optional)
-  - [Create a new cache instance](#create-a-new-cache-instance)
-  - [Add and update entries to/in the cache](#add-and-update-entries-toin-the-cache)
   - [Automatic cache updates](#automatic-cache-updates)
 - [Roadmap](#roadmap)
 - [License](#license)
@@ -94,44 +94,6 @@ This is the default configuration used by the Qache constructor. I'd recommend y
   original = null
 }
 ```
-
-### Public API
-
-#### `cacheKey` {string} (optional)
-
-Name of the cache instance. Currently only useful for debugging.
-
-**Default**: `'default'`
-
-#### `cacheKey` {string} (optional)
-
-Name of the property Qache uses to try and match entries for [automatic cache updates](#automatic-cache-updates)
-
-**Default**: `'id'`
-
-#### `lifetime` {number} (optional)
-
-Lifetime of a single cache entry in MS
-
-**Default**: `1000 * 60 * 15 (= 5 minutes)`
-
-#### `validate` {bool} (optional)
-
-Whether or not to validate entries that are added to the cache. Set to `true` to enable the `Validator` class on the created cache instance.
-
-**Default**: `false`
-
-#### `debug` {bool} (optional)
-
-Set to `true` to enable verbose logging
-
-**Default**: `false`
-
-#### `original` {object|array} (optional)
-
-An object or array of objects to create an initial validator instance.
-
-**Default**: `null`
 
 ### Create a new cache instance
 
@@ -200,6 +162,45 @@ cache.set('api/posts/', [
   },
 ]);
 ```
+
+### Public API
+
+#### `cacheKey` {string} (optional)
+
+Name of the cache instance. Currently only useful for debugging.
+
+**Default**: `'default'`
+
+#### `cacheKey` {string} (optional)
+
+Name of the property Qache uses to try and match entries for [automatic cache updates](#automatic-cache-updates)
+
+**Default**: `'id'`
+
+#### `lifetime` {number} (optional)
+
+Lifetime of a single cache entry in MS
+
+**Default**: `1000 * 60 * 15 (= 5 minutes)`
+
+#### `validate` {bool} (optional)
+
+Whether or not to validate entries that are added to the cache. Set to `true` to enable the `Validator` class on the created cache instance.
+
+**Default**: `false`
+
+#### `debug` {bool} (optional)
+
+Set to `true` to enable verbose logging
+
+**Default**: `false`
+
+#### `original` {object|array} (optional)
+
+An object or array of objects to create an initial validator instance.
+
+**Default**: `null`
+
 
 ### Automatic cache updates
 
