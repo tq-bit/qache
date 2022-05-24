@@ -11,6 +11,8 @@
     <img alt="Size" src="https://img.shields.io/bundlephobia/min/@tq-bit/qache?style=plastic">
     <img alt="npm" src="https://img.shields.io/npm/dm/@tq-bit/qache?style=plastic&logo=npm">
     <img alt="GitHub last commit" src="https://img.shields.io/github/last-commit/tq-bit/qache?style=plastic&logo=git"/>
+    <img alt="nycrc config on GitHub" src="https://img.shields.io/nycrc/tq-bit/qache?config=.nycrc&preferredThreshold=lines&logo=mocha">
+
   </div>
 </div>
 
