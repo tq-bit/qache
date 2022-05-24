@@ -20,6 +20,17 @@ export interface Schema {
   items?: Schema[];
 }
 
+/**
+ * @class
+ *
+ * @description Creates minimal object-validation schemata from primitive and complex types.
+ *              There are two kinds of validation: `quick` and `deep`.
+ *              - `quick` should be used when objects look exactly alike, including their property structure
+ *              - `deep` should be used when objects are alike structurally, but their properties are mixed up
+ *
+ * @property    {schema} Schema A schema object
+ * @property    {validate} ValidationMethod `quick` or `deep`
+ */
 export default class Validator<T> {
   private schema: Schema;
   private method: ValidationMethod;
@@ -29,6 +40,11 @@ export default class Validator<T> {
     this.schema = this.constructSchema(original);
   }
 
+  /**
+   * @description Validates an item against the currently active schema
+   *
+   * @param data The item to validate
+   */
   public validate(data: T) {
     const localSchema = this.constructSchema(data);
     if (this.method === 'quick') {
@@ -39,6 +55,11 @@ export default class Validator<T> {
     }
   }
 
+  /**
+   * @description Validates an array of items against the currently active schema
+   *
+   * @param data An array of items to validate
+   */
   public validateList(data: T[]) {
     return data.every((item: T) => {
       return this.validate(item);
@@ -85,7 +106,7 @@ export default class Validator<T> {
     };
   }
 
-  private quickSchemaValidation(schemaOne: Schema, schemaTwo: Schema) {
+  private quickSchemaValidation(schemaOne: Schema, schemaTwo: Schema): boolean {
     return JSON.stringify(schemaOne) === JSON.stringify(schemaTwo);
   }
 
@@ -140,7 +161,10 @@ export default class Validator<T> {
     return typeof original;
   }
 
-  public getSchema() {
+  /**
+   * @description Get the currently active schema of this validator instance
+   */
+  public getSchema(): Schema {
     return this.schema;
   }
 }
