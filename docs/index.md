@@ -225,6 +225,8 @@ When a single entry is created or updated, all related cached entries are automa
 
 Deleting entries works analogous. If a single entry is removed from the cache, all collections will be updated accordingly.
 
+Check out [the docs](https://tq-bit.github.io/qache/examples.html) for examples
+
 <p align="right">(<a href="#top">back to top</a>)</p>
 
 <!-- ROADMAP -->

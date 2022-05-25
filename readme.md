@@ -1,3 +1,7 @@
+---
+title: Home
+---
+
 <div id="top"></div>
 
 <div align="center">
