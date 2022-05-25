@@ -14,10 +14,9 @@
     "build": "tsc && docs:build",
     "commit": "git commit -am \"release: latest\" && git push origin master",
     "docs:dev": "vitepress dev docs",
-    "docs:build": "npm run docs:build:classes && npm run docs:build:index && vitepress build docs",
     "docs:serve": "vitepress serve docs",
-    "docs:build:index": "cp readme.md docs/index.md",
-    "docs:build:classes": "jsdoc2md dist/Cache.js > docs/api.md && jsdoc2md dist/Validator.js >> docs/api.md"
+    "docs:build": "sh bin/build_docs.sh",
+    "docs:deploy": "sh bin/deploy_docs.sh"
   },
   "keywords": [
     "cache",
