@@ -28,6 +28,7 @@ title: Home
   - [Installation](#installation)
   - [Development](#development)
     - [Build the project + docs (recommended)](#build-the-project--docs-recommended)
+    - [Run the automated test suite](#run-the-automated-test-suite)
     - [Run the documentation locally](#run-the-documentation-locally)
     - [Deploy the documentation to GitHub Pages](#deploy-the-documentation-to-github-pages)
     - [Create a new NPM release](#create-a-new-npm-release)
@@ -43,7 +44,7 @@ title: Home
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
-Qache was created to provide secure and predictable HTTP - caching for my Vue apps. It can be used as a normal Javascript cache. Its however lies in its ability to update collections of items if a single item changes. This approach was heavily inspired by [Apollo's caching system](https://www.apollographql.com/docs/react/data/caching/).
+Qache can be used as a normal Javascript cache. Its USP lies in its ability to update collections of items if a single cached item changes. The feature was heavily inspired by [Apollo's caching system](https://www.apollographql.com/docs/react/data/caching/). I created the module to provide secure and predictable HTTP - caching for my Vue apps.
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
@@ -94,6 +95,14 @@ The following command build the project and the documentation files. It applies 
 npm run pre-release
 ```
 
+#### Run the automated test suite
+
+Unit tests are written using Mocha + Chai. Run them using:
+
+```bash
+npm run test
+```
+
 #### Run the documentation locally
 
 Qache is documented using [Vitepress](https://vitepress.vuejs.org/). You can run the documentation locally:
@@ -104,7 +113,7 @@ npm run docs:dev
 
 #### Deploy the documentation to GitHub Pages
 
-You can find the release documentation under https://tq-bit.github.io/qache. To build it, run
+You can find the release documentation under https://tq-bit.github.io/qache. To build it, use:
 
 ```bash
 npm run docs:deploy
@@ -129,10 +138,10 @@ npm run release
 <!-- USAGE EXAMPLES -->
 ## Usage
 
-Besides caching single values, Qache keeps related entries in sync while ensuring type safety. As a consequence, it comes with a few opinionated (but optional) features:
+Besides caching, Qache keeps related entries in sync and ensures type safety. As a consequence, it comes with a few opinionated (but optional) features:
 
-- **One cache per API resource** -> Each cache holds a single validation schema. This implies: Each resource an application targets must have its own Qache instance.
 - **Schema validation** -> The first entry that is added into the cache defines the schema for other entries. You can optionally pass an `original` - property into the configuration to build up the schema.
+- - **One cache per API resource** -> Each cache can be equipped with a validation schema. To avoid conflicts, resources you work with should have their dedicated cache instance.
 - **Type safety** -> You can use Typescript Generics to supercharge Qache's type safety.
 - **Automatic cache updates** -> When a single entry is created or updated by its key, Qache will try to update related entries. See [Automatic cache updates](#automatic-cache-updates)
 
@@ -164,11 +173,11 @@ const cache = new Cache();
 // Add a custom configuration
 const customCache = new Cache({
   cacheKey: 'posts',      // = the key of the cache instance
-  entryKey: 'id',         // = the key-property of single cache entries
-  lifetime: 1000 * 60 * 5 // = TTL of 5 minutes,
+  entryKey: 'id',         // = the key-property of single cache entries to keep entries in sync
+  lifetime: 1000 * 60 * 5 // = assign an entry lifetime of 5 minutes,
 })
 
-// For TS users: Add a generic interface for cache entries
+// For TS users: Add a generic interface for improved type safety
 interface Post {
   id: number;
   title: string;
@@ -239,7 +248,8 @@ Check out [the docs](https://tq-bit.github.io/qache/examples.html) for examples
 - [x] Release v0.1.0
 - [x] Add a 'strict' mode in which types of entries are validated
 - [x] Make it possible to create a manual validation schema
-- [ ] Add a more complex validation algorithm
+- [x] Add a more complex validation algorithm
+- [ ] Remove the necessity to validate
 - [ ] Improve logging messages for when validation fails (requires complex validation logic)
 
 <p align="right">(<a href="#top">back to top</a>)</p>
