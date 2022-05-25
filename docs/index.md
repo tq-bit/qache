@@ -1,17 +1,22 @@
+---
+title: Home
+---
+
 <div id="top"></div>
 
 <div align="center">
 
   <h1 align="center">Qache</h1>
 
-  <p align="center">Zero-dependency, lightweight caching module for Node.js and the browser - built with Typescript</p>
+  <p align="center">Zero-dependency, lightweight caching module for Node.js and the browser</p>
 
   <div align="center">
     <img alt="License" src="https://img.shields.io/github/license/tq-bit/qache?style=plastic"/>
     <img alt="Size" src="https://img.shields.io/bundlephobia/min/@tq-bit/qache?style=plastic">
     <img alt="npm" src="https://img.shields.io/npm/dm/@tq-bit/qache?style=plastic&logo=npm">
+    <br>
     <img alt="GitHub last commit" src="https://img.shields.io/github/last-commit/tq-bit/qache?style=plastic&logo=git"/>
-    <img alt="nycrc config on GitHub" src="https://img.shields.io/nycrc/tq-bit/qache?config=.nycrc&preferredThreshold=lines&logo=mocha">
+    <img alt="nycrc config on GitHub" src="https://img.shields.io/nycrc/tq-bit/qache?config=.nycrc&preferredThreshold=lines&logo=mocha&style=plastic">
 
   </div>
 </div>
@@ -37,8 +42,7 @@
 
 <!-- ABOUT THE PROJECT -->
 ## About The Project
-
-Qache was created to provide secure and predictable HTTP - caching for my Vue apps. It can be used as a normal Javascript cache. Its however lies in its ability to update collections of items if a single item changes. This approach was heavily inspired by [Apollo's caching system](https://www.apollographql.com/docs/react/data/caching/).
+ Qache's USP lies in its ability to update collections of items if a single item changes. This approach was heavily inspired by [Apollo's caching system](https://www.apollographql.com/docs/react/data/caching/). I created it to provide secure and predictable HTTP - caching for my Vue apps.
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
@@ -49,13 +53,13 @@ Qache has a tiny footprint and no dependencies. It can be used in any Browser or
 
 ### Installation
 
-Run the following command in a project of your choice:
+You'll need a working version of Node and NPM. Then, run:
 
 ```bash
 npm install @tq-bit/qache
 ```
 
-You can then import the module into your project:
+Import the module into your project:
 
 ```js
 // Using ES6 modules:
@@ -68,13 +72,33 @@ const Qache = require('@tq-bit/qache')['default'];
 const cache = new Qache({cacheKey: 'default'});
 ```
 
+Then start to set and retrieve values:
+
+```ts
+interface Post {
+  id: number;
+  title: string;
+  body: string;
+}
+const cache = new Cache<Post>({
+  cacheKey: 'posts',
+  entryKey: 'id',
+  lifetime: 1000 * 60 * 5
+});
+
+cache.set('api/posts/1', {id: 1, title: 'Hello', body: 'World'});
+const post = cache.get('api/posts/1');
+console.log(post);
+// Prints {id: 1, title: 'Hello', body: 'World'}
+```
+
 ### Development
 
 Clone the repository to your local machine. You can find:
 
-- The source code in the `src` folder
-- Automated **Mocha** tests in the `test` folder
-- Its documentation in the `docs` folder
+- The code in `/src`
+- Automated Mocha tests in `/test`
+- A [Vitepress](https://vitepress.vuejs.org/) instance in the `/docs`
 
 > **Note:** Parts of the documentation are automatically created during build time.
 > - `index` is equal to `readme.md`
@@ -91,7 +115,7 @@ npm run pre-release
 
 #### Run the documentation locally
 
-Qache is documented using [Vitepress](https://vitepress.vuejs.org/). You can run the documentation locally:
+You can run the Vitepress documentation locally:
 
 ```bash
 npm run docs:dev
