@@ -5,7 +5,7 @@ const config = {
   title: 'Qache',
   description:
     'Zero-dependency, lightweight caching module for Node.js and the browser - built with Typescript',
-  base: '/docs/',
+  base: '/qache/',
   markdown: {
     lineNumbers: true,
   },
