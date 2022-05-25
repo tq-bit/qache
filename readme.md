@@ -103,7 +103,10 @@ npm run docs:dev
 You can find the release documentation under https://tq-bit.github.io/qache. To build it, run
 
 ```bash
-bash ./bin/deploy_docs.sh
+npm run docs:deploy
+
+# Alternatively, you can just buidl the docs and serve them locally
+npm run docs:build && npm run docs:serve
 ```
 
 #### Create a new NPM release
@@ -122,12 +125,12 @@ npm run release
 <!-- USAGE EXAMPLES -->
 ## Usage
 
-Besides caching single values, Qache also needed to keep related entries in sync while ensuring type safety. As a consequence, it comes with a few opinionated (but optional) features:
+Besides caching single values, Qache keeps related entries in sync while ensuring type safety. As a consequence, it comes with a few opinionated (but optional) features:
 
-- **One cache per API resource** -> Each cache holds a single validation schema. This implies: Each resource an application targets must have its own Qache instance. This goes for both databases and APIs.
-- **Schema validation** -> The first entry that is added into the cache defines the schema for other entries.
-- **Type safety** -> You can use Typescript Generics to improve intellisense for Qache
-- **Automatic cache updates** -> When a single entry is created or updated by its key, Qache will try to update related entries (= Array items in the same cache) as well
+- **One cache per API resource** -> Each cache holds a single validation schema. This implies: Each resource an application targets must have its own Qache instance.
+- **Schema validation** -> The first entry that is added into the cache defines the schema for other entries. You can optionally pass an `original` - property into the configuration to build up the schema.
+- **Type safety** -> You can use Typescript Generics to supercharge Qache's type safety.
+- **Automatic cache updates** -> When a single entry is created or updated by its key, Qache will try to update related entries. See [Automatic cache updates](#automatic-cache-updates)
 
 ### Default configuration example
 
@@ -221,6 +224,8 @@ When a single entry is created or updated, all related cached entries are automa
 3. It will then either `add` or `update` entries into these collection types
 
 Deleting entries works analogous. If a single entry is removed from the cache, all collections will be updated accordingly.
+
+Check out [the docs](https://tq-bit.github.io/qache/examples.html) for examples
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
