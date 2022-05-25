@@ -10,6 +10,7 @@ const config = {
     lineNumbers: true,
   },
   themeConfig: {
+    sidebar: true,
     nav: [
       {
         text: 'API',

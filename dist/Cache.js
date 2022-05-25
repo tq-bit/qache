@@ -12,6 +12,29 @@ var __rest = (this && this.__rest) || function (s, e) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const Validator_1 = require("./Validator");
+/**
+ * @class
+ *
+ * @description A simple key-value cache. Built to store typed and structured data.
+ *              Qache is built for simplicity - it clones all data and stores them
+ *              instead of keeping their references in memory.
+ *
+ * @property    {cacheKey} string A unique identifier for the Cache instance.
+ * @property    {entryKey} string The property that defines the cache entry
+ * @property    {lifetime} number The entry's lifetime in milliseconds
+ * @property    {original} any An object based on which the cache's validation can be set
+ *
+ * @example
+ * const cache = new Cache<{
+ *   id: string;
+ *   firstName: string;
+ *   secondName: string;
+ * }>({
+ *   cacheKey: 'default',
+ *   entryKey: 'id',
+ *   lifetime: 1000 * 60 * 5,
+ * });
+ */
 class Cache {
     constructor({ cacheKey = 'default', entryKey = 'id', lifetime = 1000 * 60 * 5, validate = false, debug = false, original = null, }) {
         this.cacheKey = cacheKey;
@@ -28,6 +51,20 @@ class Cache {
             this.validator = new Validator_1.default(original);
         }
     }
+    /**
+     * @description Adds an entry to the cache.
+     *
+     * @param       key Identifier of the cache entry
+     * @param       value Value of the cache entry
+     * @param       customLifetime Custom lifetime for this entry
+     *
+     * @example
+     * cache.set('/users/1', {
+     *  id: '1',
+     *  firstName: 'John',
+     *  secondName: 'Doe',
+     * })
+     */
     set(key, value, customLifetime) {
         this.hits++;
         const mustValidate = this.validate;
@@ -51,6 +88,24 @@ class Cache {
             handleSet();
         }
     }
+    /**
+     * @description Get a value from the cache.
+     *
+     * @param       key Identifier of the cache entry
+     *
+     * @returns {T | T[]} The value of the cache entry
+     *
+     * @example
+     * const user = cache.get('/users/1');
+     * console.log(user);
+     * // Prints
+     * // {
+     * //  id: '1',
+     * //  firstName: 'John',
+     * //  secondName: 'Doe',
+     * // }
+     *
+     */
     get(key) {
         var _a;
         this.hits++;
@@ -62,6 +117,17 @@ class Cache {
             this.log(`Key ${key} not found in cache`);
         }
     }
+    /**
+     * @description Deletes a single entry from the cache
+     *
+     * @param       key Identifier of the cache entry
+     *
+     * @returns     {boolean} Whether the entry was deleted
+     *
+     * @example
+     * cache.del('/users/1');
+     * // Returns true
+     */
     del(key) {
         this.hits++;
         this.log(`Deleting key ${key} from cache ${this.cacheKey}`);
@@ -72,6 +138,11 @@ class Cache {
         }
         return !!(value === null || value === void 0 ? void 0 : value.data);
     }
+    /**
+     * @description Get details about the cache instance
+     *
+     * @returns {CacheStats} A list of details about the current cache instance
+     */
     stats() {
         return {
             cacheKey: this.cacheKey,
@@ -83,6 +154,10 @@ class Cache {
             hits: this.hits,
         };
     }
+    /**
+     * @description Resets the cache instance.
+     *              Does not reset schemata and datatype.
+     */
     flush() {
         this.hits = 0;
         this.cacheMap = {};

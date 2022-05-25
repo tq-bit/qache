@@ -35,7 +35,7 @@ interface CacheStats {
  * @class
  *
  * @description A simple key-value cache. Built to store typed and structured data.
- *              Qache is built for simplicity - it clones all data and stores them
+ *              Qache combines simplicity and security - it clones all data and stores them
  *              instead of keeping their references in memory.
  *
  * @property    {cacheKey} string A unique identifier for the Cache instance.

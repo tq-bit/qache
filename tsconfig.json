@@ -6,7 +6,6 @@
     "strict": true,
     "declaration": true,
     "moduleResolution": "node",
-    "removeComments": true,
     "types": ["node", "mocha", "chai"],
     "sourceMap": true
   },

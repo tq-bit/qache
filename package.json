@@ -14,8 +14,9 @@
     "build": "tsc",
     "commit": "git commit -am \"release: latest\" && git push origin master",
     "docs:dev": "vitepress dev docs",
-    "docs:build": "vitepress build docs",
-    "docs:serve": "vitepress serve docs"
+    "docs:build": "npm run docs:build:classes && vitepress build docs",
+    "docs:serve": "vitepress serve docs",
+    "docs:build:classes": "jsdoc2md dist/Cache.js > docs/api.md && jsdoc2md dist/Validator.js >> docs/api.md"
   },
   "keywords": [
     "cache",
@@ -40,6 +41,7 @@
     "eslint": "^8.16.0",
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-prettier": "^4.0.0",
+    "jsdoc-to-markdown": "^7.1.1",
     "mocha": "^10.0.0",
     "nyc": "^15.1.0",
     "source-map-support": "^0.5.21",
