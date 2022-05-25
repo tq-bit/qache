@@ -13,6 +13,10 @@ const config = {
     sidebar: true,
     nav: [
       {
+        text: 'Home',
+        link: '/',
+      },
+      {
         text: 'API',
         link: '/api',
       },
