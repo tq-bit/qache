@@ -1,3 +1,7 @@
+---
+title: API reference
+editLink: true
+---
 <a name="Cache"></a>
 
 ## Cache
