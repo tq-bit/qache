@@ -22,17 +22,14 @@
 - [About The Project](#about-the-project)
 - [Getting Started](#getting-started)
   - [Installation](#installation)
+  - [Development](#development)
+    - [Build the project + docs (recommended)](#build-the-project--docs-recommended)
+    - [Run the documentation locally](#run-the-documentation-locally)
+    - [Create a new NPM release](#create-a-new-npm-release)
 - [Usage](#usage)
   - [Default configuration example](#default-configuration-example)
   - [Create a new cache instance](#create-a-new-cache-instance)
-  - [Add and update entries to/in the cache](#add-and-update-entries-toin-the-cache)
-  - [Public API](#public-api)
-    - [`cacheKey` {string} (optional)](#cachekey-string-optional)
-    - [`cacheKey` {string} (optional)](#cachekey-string-optional-1)
-    - [`lifetime` {number} (optional)](#lifetime-number-optional)
-    - [`validate` {bool} (optional)](#validate-bool-optional)
-    - [`debug` {bool} (optional)](#debug-bool-optional)
-    - [`original` {object|array} (optional)](#original-objectarray-optional)
+  - [Add and modify cache entries](#add-and-modify-cache-entries)
   - [Automatic cache updates](#automatic-cache-updates)
 - [Roadmap](#roadmap)
 - [License](#license)
@@ -70,6 +67,46 @@ const Qache = require('@tq-bit/qache')['default'];
 // You can then start using it in your code:
 const cache = new Qache({cacheKey: 'default'});
 ```
+
+### Development
+
+Clone the repository to your local machine. You can find:
+
+- The source code in the `src` folder
+- Automated **Mocha** tests in the `test` folder
+- Its documentation in the `docs` folder
+
+> **Note:** Parts of the documentation are automatically created during build time.
+> - `index` is equal to `readme.md`
+> - `api` is extracted from JSDoc comments in the built files
+
+
+#### Build the project + docs (recommended)
+
+The following command build the project and the documentation files. It applies configured linting rules and runs registered automated tests.
+
+```bash
+npm run pre-release
+```
+
+#### Run the documentation locally
+
+Qache is documented using [Vitepress](https://vitepress.vuejs.org/). You can run the documentation locally:
+
+```bash
+npm run docs:dev
+```
+
+#### Create a new NPM release
+
+This command runs the `pre-release` command and pushes a new, built version on NPM
+
+> **Note:** This command requires a 2fa confirmation
+
+```bash
+npm run release
+```
+
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
@@ -136,7 +173,7 @@ const typedCacheWithOriginal = new Cache<Post>({
 });
 ```
 
-### Add and update entries to/in the cache
+### Add and modify cache entries
 
 Each cache entry is saved a simple Javascript Object. It is identified by a `key` and has a dedicated `timeout` instance.
 
@@ -165,45 +202,6 @@ cache.set('api/posts/', [
   },
 ]);
 ```
-
-### Public API
-
-#### `cacheKey` {string} (optional)
-
-Name of the cache instance. Currently only useful for debugging.
-
-**Default**: `'default'`
-
-#### `cacheKey` {string} (optional)
-
-Name of the property Qache uses to try and match entries for [automatic cache updates](#automatic-cache-updates)
-
-**Default**: `'id'`
-
-#### `lifetime` {number} (optional)
-
-Lifetime of a single cache entry in MS
-
-**Default**: `1000 * 60 * 15 (= 5 minutes)`
-
-#### `validate` {bool} (optional)
-
-Whether or not to validate entries that are added to the cache. Set to `true` to enable the `Validator` class on the created cache instance.
-
-**Default**: `false`
-
-#### `debug` {bool} (optional)
-
-Set to `true` to enable verbose logging
-
-**Default**: `false`
-
-#### `original` {object|array} (optional)
-
-An object or array of objects to create an initial validator instance.
-
-**Default**: `null`
-
 
 ### Automatic cache updates
 

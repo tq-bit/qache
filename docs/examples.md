@@ -1,5 +1,5 @@
 ---
-title: HTTP request examples
+title: Examples
 editLink: true
 ---
 
