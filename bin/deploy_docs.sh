@@ -21,4 +21,4 @@ git push -f git@github.com:tq-bit/qache.git master:gh-pages
 
 cd -
 
-rm -rf docs/.vitepress/dist/.git
+rm -rf docs/.vitepress/dist/
