@@ -25,6 +25,7 @@
   - [Development](#development)
     - [Build the project + docs (recommended)](#build-the-project--docs-recommended)
     - [Run the documentation locally](#run-the-documentation-locally)
+    - [Deploy the documentation to GitHub Pages](#deploy-the-documentation-to-github-pages)
     - [Create a new NPM release](#create-a-new-npm-release)
 - [Usage](#usage)
   - [Default configuration example](#default-configuration-example)
@@ -95,6 +96,14 @@ Qache is documented using [Vitepress](https://vitepress.vuejs.org/). You can run
 
 ```bash
 npm run docs:dev
+```
+
+#### Deploy the documentation to GitHub Pages
+
+You can find the release documentation under https://tq-bit.github.io/qache. To build it, run
+
+```bash
+bash ./bin/deploy_docs.sh
 ```
 
 #### Create a new NPM release
