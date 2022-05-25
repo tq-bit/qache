@@ -26,7 +26,7 @@ export interface Schema {
  * @description Creates minimal object-validation schemata from primitive and complex types.
  *              There are two kinds of validation: `quick` and `deep`.
  *              - `quick` should be used when objects look exactly alike, including their property structure
- *              - `deep` should be used when objects are alike structurally, but their properties are mixed up
+ *              - `deep` should be used when objects are alike structurally, but their properties's indexes differ.
  *
  * @property    {schema} Schema A schema object
  * @property    {validate} ValidationMethod `quick` or `deep`
