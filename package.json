@@ -1,0 +1,52 @@
+{
+  "name": "@tq-bit/qache",
+  "version": "0.1.7",
+  "description": "Zero-dependency, lightweight caching module for Node.js and the browser",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "release": "npm run pre-release && npm version patch --no-git-tag-version && npm run commit && npm publish --access public",
+    "release:minor": "npm run pre-release && npm version minor --no-git-tag-version && npm run commit && npm publish --access public",
+    "release:major": "npm run pre-release && npm version major --no-git-tag-version && npm run commit && npm publish --access public",
+    "pre-release": "npm run lint && npm run test && npm run build",
+    "lint": "eslint ./src/** --fix",
+    "test": "nyc mocha -r ts-node/register ./test/*.spec.ts --exit",
+    "build": "tsc && docs:build",
+    "commit": "git commit -am \"release: latest\" && git push origin master",
+    "docs:dev": "vitepress dev docs",
+    "docs:serve": "vitepress serve docs",
+    "docs:build": "sh bin/build_docs.sh",
+    "docs:deploy": "sh bin/deploy_docs.sh"
+  },
+  "keywords": [
+    "cache",
+    "node",
+    "browser"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tq-bit/qache.git"
+  },
+  "author": "tobi@q-bit.me",
+  "license": "MIT",
+  "devDependencies": {
+    "@istanbuljs/nyc-config-typescript": "^1.0.2",
+    "@types/chai": "^4.3.1",
+    "@types/mocha": "^9.1.1",
+    "@types/node": "^17.0.35",
+    "@typescript-eslint/eslint-plugin": "^5.25.0",
+    "@typescript-eslint/parser": "^5.25.0",
+    "axios": "^0.27.2",
+    "chai": "^4.3.6",
+    "eslint": "^8.16.0",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-plugin-prettier": "^4.0.0",
+    "jsdoc-to-markdown": "^7.1.1",
+    "mocha": "^10.0.0",
+    "nyc": "^15.1.0",
+    "source-map-support": "^0.5.21",
+    "ts-node": "^10.8.0",
+    "typescript": "^4.6.4",
+    "vitepress": "^0.22.4"
+  }
+}

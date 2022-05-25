@@ -1,0 +1,9 @@
+src/*
+test/*
+examples/*
+.nyc_output/*
+docs/*
+
+prettier.config.js
+.gitignore
+.eslintrc
