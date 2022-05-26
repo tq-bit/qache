@@ -1,9 +1,10 @@
-src/*
-test/*
-examples/*
-.nyc_output/*
-docs/*
+.nyc_output
+bin
+docs
+src
+test
 
 prettier.config.js
 .gitignore
 .eslintrc
+tsconfig.json
