@@ -15,8 +15,7 @@ title: Home
     <img alt="Size" src="https://img.shields.io/bundlephobia/min/@tq-bit/qache?style=plastic">
     <img alt="npm" src="https://img.shields.io/npm/dm/@tq-bit/qache?style=plastic&logo=npm">
     <img alt="GitHub last commit" src="https://img.shields.io/github/last-commit/tq-bit/qache?style=plastic&logo=git"/>
-    <img alt="nycrc config on GitHub" src="https://img.shields.io/nycrc/tq-bit/qache?config=.nycrc&preferredThreshold=lines&logo=mocha">
-
+    <img alt="nycrc config on GitHub" src="https://img.shields.io/nycrc/tq-bit/qache?config=.nycrc&preferredThreshold=lines&logo=mocha&style=plastic">
   </div>
 </div>
 
@@ -45,6 +44,8 @@ title: Home
 ## About The Project
 
 Qache can be used as a normal Javascript cache. Its USP lies in its ability to update collections of items if a single cached item changes. The feature was heavily inspired by [Apollo's caching system](https://www.apollographql.com/docs/react/data/caching/). I created the module to provide secure and predictable HTTP - caching for my Vue apps.
+
+![](/assets/Qache-built.png)
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 

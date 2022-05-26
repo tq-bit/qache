@@ -28,7 +28,7 @@ editLink: true
 
 ### new Cache()
 A simple key-value cache. Built to store typed and structured data.
-             Qache is built for simplicity - it clones all data and stores them
+             Qache combines simplicity and security - it clones all data and stores them
              instead of keeping their references in memory.
 
 **Example**  
@@ -142,7 +142,7 @@ Resets the cache instance.
 Creates minimal object-validation schemata from primitive and complex types.
              There are two kinds of validation: `quick` and `deep`.
              - `quick` should be used when objects look exactly alike, including their property structure
-             - `deep` should be used when objects are alike structurally, but their properties are mixed up
+             - `deep` should be used when objects are alike structurally, but their properties's indexes differ.
 
 <a name="Validator+validate"></a>
 

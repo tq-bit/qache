@@ -15,8 +15,7 @@ title: Home
     <img alt="Size" src="https://img.shields.io/bundlephobia/min/@tq-bit/qache?style=plastic">
     <img alt="npm" src="https://img.shields.io/npm/dm/@tq-bit/qache?style=plastic&logo=npm">
     <img alt="GitHub last commit" src="https://img.shields.io/github/last-commit/tq-bit/qache?style=plastic&logo=git"/>
-    <img alt="nycrc config on GitHub" src="https://img.shields.io/nycrc/tq-bit/qache?config=.nycrc&preferredThreshold=lines&logo=mocha">
-
+    <img alt="nycrc config on GitHub" src="https://img.shields.io/nycrc/tq-bit/qache?config=.nycrc&preferredThreshold=lines&logo=mocha&style=plastic">
   </div>
 </div>
 
@@ -44,14 +43,20 @@ title: Home
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
-Qache can be used as a normal Javascript cache. Its USP lies in its ability to update collections of items if a single cached item changes. The feature was heavily inspired by [Apollo's caching system](https://www.apollographql.com/docs/react/data/caching/). I created the module to provide secure and predictable HTTP - caching for my Vue apps.
+Qache at its core is a simple key-value store. Its USP lies in the ability to keep collections of items in sync with single entries. The feature was heavily inspired by [Apollo's caching system](https://www.apollographql.com/docs/react/data/caching/). I also added a validation system to prevent faulty values from sneaking in.
+
+The module's structured like this:
+
+![](/assets/Qache-built.png)
+
+I built Qache as a secure and lightweight HTTP cache for my Vue apps. It can also be used on the serverside using ES6 module imports.
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
 <!-- GETTING STARTED -->
 ## Getting Started
 
-Qache has a tiny footprint and no dependencies. It can be used in any Browser or Node (v14+) environment.
+Qache has a tiny footprint and no dependencies. It can be used in any Browser or Node (v14+) environment that supports [ES6 module imports](https://www.geeksforgeeks.org/how-to-use-an-es6-import-in-node-js/).
 
 ### Installation
 
@@ -67,11 +72,11 @@ You can then import the module into your project:
 // Using ES6 modules:
 import Qache from '@tq-bit/qache';
 
-// Using CommonJS:
+// Using CommonJS (untested, may not support intellisense properly):
 const Qache = require('@tq-bit/qache')['default'];
 
 // You can then start using it in your code:
-const cache = new Qache({cacheKey: 'default'});
+const cache = new Qache({cacheKey: 'posts'});
 ```
 
 ### Development
