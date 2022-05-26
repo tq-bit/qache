@@ -1,6 +1,6 @@
 {
   "name": "@tq-bit/qache",
-  "version": "0.1.7",
+  "version": "0.1.8",
   "description": "Zero-dependency, lightweight caching module for Node.js and the browser",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -11,7 +11,7 @@
     "pre-release": "npm run lint && npm run test && npm run build",
     "lint": "eslint ./src/** --fix",
     "test": "nyc mocha -r ts-node/register ./test/*.spec.ts --exit",
-    "build": "tsc && docs:build",
+    "build": "tsc",
     "commit": "git commit -am \"release: latest\" && git push origin master",
     "docs:dev": "vitepress dev docs",
     "docs:serve": "vitepress serve docs",
