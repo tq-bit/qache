@@ -56,7 +56,7 @@ class Cache {
      *
      * @param       key Identifier of the cache entry
      * @param       value Value of the cache entry
-     * @param       customLifetime Custom lifetime for this entry
+     * @param       options Custom options for this cache entry
      *
      * @example
      * cache.set('/users/1', {
@@ -65,12 +65,14 @@ class Cache {
      *  secondName: 'Doe',
      * })
      */
-    set(key, value, customLifetime) {
+    set(key, value, options) {
         this.hits++;
         const mustValidate = this.validate;
         const handleSet = () => {
-            const timeoutKey = this.scheduleEntryDeletion(key, customLifetime);
-            this.cacheMap[key] = { data: value, timeoutKey };
+            var _a;
+            const timeoutKey = this.scheduleEntryDeletion(key, options === null || options === void 0 ? void 0 : options.customLifetime);
+            const ignoreUpdates = (_a = options === null || options === void 0 ? void 0 : options.ignoreUpdates) !== null && _a !== void 0 ? _a : false;
+            this.cacheMap[key] = { data: value, timeoutKey, ignoreUpdates };
             if (!Array.isArray(value)) {
                 this.updateRelatedCacheEntries(key, value);
             }
@@ -188,9 +190,12 @@ class Cache {
         }
     }
     updateRelatedCacheEntries(key, value) {
-        var _a;
         for (const cacheMapKey in this.cacheMap) {
-            const entryData = (_a = this.cacheMap[cacheMapKey]) === null || _a === void 0 ? void 0 : _a.data;
+            const cacheMapEntry = this.cacheMap[cacheMapKey];
+            if (cacheMapEntry.ignoreUpdates) {
+                return;
+            }
+            const entryData = cacheMapEntry === null || cacheMapEntry === void 0 ? void 0 : cacheMapEntry.data;
             const cachedEntryIsArray = Array.isArray(entryData);
             if (cachedEntryIsArray) {
                 const entries = entryData;

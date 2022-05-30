@@ -99,12 +99,9 @@ interface Post { ... }
 
 This will initialize a new cache instance to store posts we will fetch in a second.
 
-### The HTTP module with Qache
+Now, let's refactor all the above methods to fit the new cache functionality.
 
-Let's refactor all the above methods to fit the new cache functionality:
-
-
-#### For GET requests:
+### Cache GET requests
 
 - Each time a function is invoked that returns data, we'll check if there's a matching entry in the cache.
 - If so, we'll return it
@@ -147,7 +144,7 @@ export async function getPostsByUserId(userId: string): Promise<Post[]> {
 }
 ```
 
-#### For POST requests:
+### Cache POST responses
 
 It's common for servers to return a newly created resource in response to a `POST` request. Since our cache is keyed by the resource's `id`, we'll need to update it with the new entry.
 

@@ -256,8 +256,8 @@ Check out [the docs](https://tq-bit.github.io/qache/examples.html) for examples
 - [x] Add a 'strict' mode in which types of entries are validated
 - [x] Make it possible to create a manual validation schema
 - [x] Add a more complex validation algorithm
+- [x] Add logic to prevent automatic cache updates, if not necessary
 - [ ] Remove the necessity to validate
-- [ ] Add logic to prevent automatic cache updates, if not necessary
 - [ ] Improve logging messages for when validation fails (requires complex validation logic)
 
 <p align="right">(<a href="#top">back to top</a>)</p>

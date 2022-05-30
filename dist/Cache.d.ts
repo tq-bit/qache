@@ -1,4 +1,8 @@
 declare type CacheDataType = 'string' | 'number' | 'bigint' | 'boolean' | 'symbol' | 'undefined' | 'object' | 'function' | 'array' | null;
+export interface CacheSetOptions {
+    customLifetime?: number;
+    ignoreUpdates?: boolean;
+}
 export interface CacheOptions {
     cacheKey?: string;
     entryKey?: string;
@@ -56,7 +60,7 @@ export default class Cache<T> {
      *
      * @param       key Identifier of the cache entry
      * @param       value Value of the cache entry
-     * @param       customLifetime Custom lifetime for this entry
+     * @param       options Custom options for this cache entry
      *
      * @example
      * cache.set('/users/1', {
@@ -65,7 +69,7 @@ export default class Cache<T> {
      *  secondName: 'Doe',
      * })
      */
-    set(key: string, value: T | T[], customLifetime?: number): void;
+    set(key: string, value: T | T[], options?: CacheSetOptions): void;
     /**
      * @description Get a value from the cache.
      *
