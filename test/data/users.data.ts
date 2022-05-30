@@ -3,6 +3,23 @@ export const urlUserOne = '/api/v1/users/1';
 export const urlUserTwo = '/api/v1/users/2';
 export const urlUserThree = '/api/v1/users/3';
 
+export interface User {
+  id: string;
+  firstName: string;
+  secondName: string;
+  adresses?: {
+    street?: string;
+    city?: string;
+  }[];
+  items?: {
+    id?: number;
+    payments?: {
+      id?: number;
+      amount?: number;
+    }[];
+  }[];
+}
+
 export const userSchema = {
   type: 'object',
   properties: {
@@ -160,7 +177,6 @@ export const payloadUserInDifferentOrder = {
   adresses: [
     {
       street: 'Street 5',
-      id: 5,
     },
   ],
   items: [
@@ -187,7 +203,6 @@ export const payloadUserWrongType = {
   adresses: [
     {
       street: 'Street 5',
-      id: 5,
     },
   ],
   items: [

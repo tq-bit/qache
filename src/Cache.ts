@@ -12,6 +12,10 @@ type CacheDataType =
   | 'array'
   | null;
 
+export interface CacheSetOptions {
+  ignoreUpdates: boolean;
+}
+
 export interface CacheOptions {
   cacheKey?: string;
   entryKey?: string;
@@ -65,6 +69,7 @@ export default class Cache<T> {
     [key: string]: {
       data: T | T[];
       timeoutKey: ReturnType<typeof setTimeout>;
+      ignoreUpdates: boolean;
     };
   };
   private validator: Validator<T> | null;
@@ -108,12 +113,18 @@ export default class Cache<T> {
    *  secondName: 'Doe',
    * })
    */
-  public set(key: string, value: T | T[], customLifetime?: number) {
+  public set(
+    key: string,
+    value: T | T[],
+    customLifetime?: number,
+    options?: CacheSetOptions,
+  ) {
     this.hits++;
     const mustValidate = this.validate;
     const handleSet = () => {
       const timeoutKey = this.scheduleEntryDeletion(key, customLifetime);
-      this.cacheMap[key] = { data: value, timeoutKey };
+      const ignoreUpdates = options?.ignoreUpdates ?? false;
+      this.cacheMap[key] = { data: value, timeoutKey, ignoreUpdates };
       if (!Array.isArray(value)) {
         this.updateRelatedCacheEntries(key, value);
       }
@@ -236,7 +247,12 @@ export default class Cache<T> {
 
   private updateRelatedCacheEntries(key: string, value?: T) {
     for (const cacheMapKey in this.cacheMap) {
-      const entryData = this.cacheMap[cacheMapKey]?.data;
+      const cacheMapEntry = this.cacheMap[cacheMapKey];
+      if (cacheMapEntry.ignoreUpdates) {
+        return;
+      }
+
+      const entryData = cacheMapEntry?.data;
       const cachedEntryIsArray = Array.isArray(entryData);
 
       if (cachedEntryIsArray) {

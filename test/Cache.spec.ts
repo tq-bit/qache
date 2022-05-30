@@ -21,6 +21,7 @@ import {
   urlUsers,
   payloadUsersWithAdditionalProperty,
   payloadWithAdditionalProperty,
+  User,
 } from './data/users.data';
 
 describe('Cache class', () => {
@@ -133,6 +134,25 @@ describe('Cache class', () => {
       cache.set('invalid-list', [...payloadUsersWithAdditionalProperty]);
       expect(cache.get('invalid')).to.be.undefined;
       expect(cache.get('invalid-list')).to.be.undefined;
+    });
+
+    it('Should not add or update an entry if updates are disabled for this cache entry', () => {
+      const cache = new Cache<User>({ ...options, validate: true });
+      const newFirstName = 'This update should be ignored!';
+
+      cache.set(urlUsers, [...payloadUsers], 15000, { ignoreUpdates: true });
+      cache.set(urlUserOne, {
+        ...payloadUserOne,
+        firstName: newFirstName,
+      });
+      const cachedUserEntry = cache.get(urlUserOne) as User;
+      const cachedUserList = cache.get(urlUsers) as User[];
+      const entryToBeIgnored = cachedUserList.find(
+        (user) => user.id === cachedUserEntry.id,
+      ) as User;
+
+      expect(cachedUserEntry.firstName === newFirstName).to.be.true;
+      expect(entryToBeIgnored.firstName === newFirstName).to.be.false;
     });
   });
 });
