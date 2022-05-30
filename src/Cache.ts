@@ -13,7 +13,8 @@ type CacheDataType =
   | null;
 
 export interface CacheSetOptions {
-  ignoreUpdates: boolean;
+  customLifetime?: number;
+  ignoreUpdates?: boolean;
 }
 
 export interface CacheOptions {
@@ -104,7 +105,7 @@ export default class Cache<T> {
    *
    * @param       key Identifier of the cache entry
    * @param       value Value of the cache entry
-   * @param       customLifetime Custom lifetime for this entry
+   * @param       options Custom options for this cache entry
    *
    * @example
    * cache.set('/users/1', {
@@ -113,16 +114,14 @@ export default class Cache<T> {
    *  secondName: 'Doe',
    * })
    */
-  public set(
-    key: string,
-    value: T | T[],
-    customLifetime?: number,
-    options?: CacheSetOptions,
-  ) {
+  public set(key: string, value: T | T[], options?: CacheSetOptions) {
     this.hits++;
     const mustValidate = this.validate;
     const handleSet = () => {
-      const timeoutKey = this.scheduleEntryDeletion(key, customLifetime);
+      const timeoutKey = this.scheduleEntryDeletion(
+        key,
+        options?.customLifetime,
+      );
       const ignoreUpdates = options?.ignoreUpdates ?? false;
       this.cacheMap[key] = { data: value, timeoutKey, ignoreUpdates };
       if (!Array.isArray(value)) {

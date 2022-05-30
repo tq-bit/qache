@@ -140,7 +140,7 @@ describe('Cache class', () => {
       const cache = new Cache<User>({ ...options, validate: true });
       const newFirstName = 'This update should be ignored!';
 
-      cache.set(urlUsers, [...payloadUsers], 15000, { ignoreUpdates: true });
+      cache.set(urlUsers, [...payloadUsers], { ignoreUpdates: true });
       cache.set(urlUserOne, {
         ...payloadUserOne,
         firstName: newFirstName,
