@@ -1,8 +1,3 @@
----
-title: Home
----
-
-
 <div id="top"></div>
 
 <div align="center">
@@ -49,7 +44,7 @@ Qache at its core is a simple key-value store. Its USP lies in the ability to ke
 
 The module's structured like this:
 
-![](/assets/Qache-built.png)
+![](https://github.com/tq-bit/qache/blob/master/docs/assets/Qache-built.png)
 
 I built Qache as a secure and lightweight HTTP cache for my Vue apps. It can also be used on the serverside using ES6 module imports.
 

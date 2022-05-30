@@ -10,9 +10,9 @@ editLink: true
 
 The primary purpose of Qache is HTTP caching. Let's start with an example that uses a service module to fetch data from **jsonplaceholder**.
 
-Assume the following, basic project structure. You can use a [Codesandbox](https://codesandbox.io/) template to get started:
+This example uses the project structure below. You can create a [Codesandbox](https://codesandbox.io/) to get started or create a local Typescript project:
 
-```
+```bash
 /
 | - /src
 |   | - /services
@@ -25,13 +25,14 @@ Assume the following, basic project structure. You can use a [Codesandbox](https
 
 First, build the service module without caching. It'll include
 
-- A **post** - TS interface
-- CRUD API methods
+- A Typescript interface named **post**
+- CRUD methods for the resource **post** of the **jsonplaceholder** API
+
+Add the following code into the `post.api.ts` file:
 
 <details>
 <summary>
-Add the following code into the `post.api.ts` file:
-
+Toggle code
 </summary>
 
 ```ts
@@ -107,6 +108,11 @@ Now, let's refactor all the above methods to fit the new cache functionality.
 - If so, we'll return it
 - Else, we'll send the HTTP request and cache the response
 
+<details>
+<summary>
+Toggle code
+</summary>
+
 ```ts
 export async function getPostById(postId: string): Promise<Post> {
   const resourceKey = `${url}/${postId}`;
@@ -144,6 +150,8 @@ export async function getPostsByUserId(userId: string): Promise<Post[]> {
 }
 ```
 
+</details>
+
 ### Cache POST responses
 
 It's common for servers to return a newly created resource in response to a `POST` request. Since our cache is keyed by the resource's `id`, we'll need to update it with the new entry.
@@ -153,6 +161,11 @@ For this, we'll
 - create the resource on the server
 - read out the response data and create a `resourceKey` based on the entry's `id`
 - write the data to the cache instance
+
+<details>
+<summary>
+Toggle code
+</summary>
 
 ```ts
 export async function createPost(payload: Post): Promise<Post> {
@@ -167,6 +180,9 @@ export async function createPost(payload: Post): Promise<Post> {
   return data;
 }
 ```
+
+</details>
+
 ::: tip About related data
 When changing data in the cache, related entries of a cache resource will be updated as well, see [Automatic cache updates](#automatic-cache-updates). In this case, when you create a new post, Qache will try to update all cached post collections.
 :::
@@ -323,12 +339,28 @@ async function update(contact: Contact): Promise<Contact> {
 
 ### Disable automated cache updates
 
-There might be cases in which you won't want to update related entries.
+There might be cases in which related entries should not be updated. This is also true for our paginated example. **We don't want Qache to add a new entry to *all* cached pages**. Depending on your caching strategy, you can disable automatic updates by setting  `ignoreUpdates` to `true` when setting a new collection entry:
+
+```ts {9}
+async function getContactList(page: number, per_page: number): Promise<Contact[]> {
+  const url = `/api/contact?page=${page}&per_page=${per_page}`
+  const cachedContactList = contactCache.get(url)
+  if(cachedContactList) {
+    return cachedContactList
+  }
+  const response = await fetch();
+  const contacts = await response.json();
+  contactCache.set(url, contacts, { ignoreUpdates: true });
+  return contacts;
+}
+```
+
+Now, if you CRUD on your contact resource, this collection will not be updated.
 
 ### The final result
 
-After making a POST and a PUT request, you can call `getContact` and `getContactList` again. Instead of making immediate API calls, both functions will first try to find a matching entry in the cache. Qache took care of synchronizing new and updated entries automaticlly, there's no deviation between your local and the server state.
+After making a POST and a PUT request, you can call `getContact` and `getContactList` again. Instead of making immediate API calls, both functions will first try to find a matching entry in the cache.
 
 ::: tip Sync successful
-When setting new entries, Qache iterated through all array elements in its cache and updates the respective entry.
+Unless you set `ignoreUpdates` to `true`, Qache took care of synchronizing new and updated entries automaticlly. There's no delta between your local- and the server's state.
 :::

@@ -1,7 +1,7 @@
 ---
 title: Home
+editLink: true
 ---
-
 <div id="top"></div>
 
 <div align="center">
@@ -14,6 +14,7 @@ title: Home
     <img alt="License" src="https://img.shields.io/github/license/tq-bit/qache?style=plastic"/>
     <img alt="Size" src="https://img.shields.io/bundlephobia/min/@tq-bit/qache?style=plastic">
     <img alt="npm" src="https://img.shields.io/npm/dm/@tq-bit/qache?style=plastic&logo=npm">
+    <img alt="lgtm code quality" src="https://img.shields.io/lgtm/grade/javascript/g/tq-bit/qache.svg?logo=lgtm&style=plastic">
     <img alt="GitHub last commit" src="https://img.shields.io/github/last-commit/tq-bit/qache?style=plastic&logo=git"/>
     <img alt="nycrc config on GitHub" src="https://img.shields.io/nycrc/tq-bit/qache?config=.nycrc&preferredThreshold=lines&logo=mocha&style=plastic">
   </div>
@@ -47,7 +48,7 @@ Qache at its core is a simple key-value store. Its USP lies in the ability to ke
 
 The module's structured like this:
 
-![](/assets/Qache-built.png)
+![](https://github.com/tq-bit/qache/blob/master/docs/assets/Qache-built.png)
 
 I built Qache as a secure and lightweight HTTP cache for my Vue apps. It can also be used on the serverside using ES6 module imports.
 
@@ -254,6 +255,7 @@ Check out [the docs](https://tq-bit.github.io/qache/examples.html) for examples
 - [x] Add a 'strict' mode in which types of entries are validated
 - [x] Make it possible to create a manual validation schema
 - [x] Add a more complex validation algorithm
+- [x] Add logic to prevent automatic cache updates, if not necessary
 - [ ] Remove the necessity to validate
 - [ ] Improve logging messages for when validation fails (requires complex validation logic)
 
