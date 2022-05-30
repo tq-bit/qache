@@ -6,6 +6,174 @@ editLink: true
 
 # {{ $frontmatter.title }}
 
+## A simple HTTP cache with fetch
+
+The primary purpose of Qache is HTTP caching. Let's start with an example that uses a service module to fetch data from **jsonplaceholder**.
+
+Assume the following, basic project structure. You can use a [Codesandbox](https://codesandbox.io/) template to get started:
+
+```
+/
+| - /src
+|   | - /services
+|   |   | - post.api.ts
+|   | - index.ts
+| - index.html
+```
+
+### The HTTP module without Qache
+
+First, build the service module without caching. It'll include
+
+- A **post** - TS interface
+- CRUD API methods
+
+<details>
+<summary>
+Add the following code into the `post.api.ts` file:
+
+</summary>
+
+```ts
+interface Post {
+  id: number;
+  userId: number;
+  title: string;
+  body: string;
+}
+
+export async function getPostById(postId: string): Promise<Post> {
+  const response = await fetch(`${url}/${postId}`);
+  return response.json();
+}
+
+export async function getPosts(): Promise<Post[]> {
+  const response = await fetch(url);
+  return response.json();
+}
+
+export async function getPostsByUserId(userId: string): Promise<Post[]> {
+  const response = await fetch(`${url}?userId=${userId}`);
+  return response.json();
+}
+
+export async function createPost(payload: Post): Promise<Post> {
+  const response = await fetch(url, {
+    method: "POST",
+    body: JSON.stringify(payload),
+    headers: { "content-type": "application/json" }
+  });
+  return response.json();
+}
+
+export async function deletePost(postId: string): Promise<Post> {
+  const response = await fetch(`${url}/${postId}`);
+  return response.json();
+}
+
+export async function updatePost(postId: string, payload: Post): Promise<Post> {
+  const response = await fetch(`${url}/${postId}`, {
+    method: "PUT",
+    body: JSON.stringify(payload),
+    headers: { "content-type": "application/json" }
+  });
+  return response.json();
+}
+```
+</details>
+
+### Import Qache and initialize it
+
+At the top if `post.api.ts` file, add the following.
+
+```ts
+import Qache from "@tq-bit/qache";
+
+const url = "https://jsonplaceholder.typicode.com/posts";
+const cache = new Qache<Post>({ cacheKey: "posts", entryKey: "id" });
+
+interface Post { ... }
+
+// -- snip --
+```
+
+This will initialize a new cache instance to store posts we will fetch in a second.
+
+### The HTTP module with Qache
+
+Let's refactor all the above methods to fit the new cache functionality:
+
+
+#### For GET requests:
+
+- Each time a function is invoked that returns data, we'll check if there's a matching entry in the cache.
+- If so, we'll return it
+- Else, we'll send the HTTP request and cache the response
+
+```ts
+export async function getPostById(postId: string): Promise<Post> {
+  const resourceKey = `${url}/${postId}`;
+  const cachedData = cache.get(resourceKey) as Post;
+  if (cachedData) {
+    return cachedData;
+  }
+  const response = await fetch(resourceKey);
+  const data = await response.json()
+  cache.set(url, data);
+  return data;
+}
+
+export async function getPosts(): Promise<Post[]> {
+  const cachedData = cache.get(resourceKey) as Post[];
+  if (cachedData) {
+    return cachedData;
+  }
+  const response = await fetch(url);
+  const data = await response.json()
+  cache.set(url, data);
+  return data;
+}
+
+export async function getPostsByUserId(userId: string): Promise<Post[]> {
+  const resourceKey = `${url}?userId=${userId}`;
+  const cachedData = cache.get(resourceKey) as Post[];
+  if(cachedData) {
+    return cachedData;
+  }
+  const response = await fetch(resourceKey);
+  const data = await response.json();
+  cache.set(url, data);
+  return data;
+}
+```
+
+#### For POST requests:
+
+It's common for servers to return a newly created resource in response to a `POST` request. Since our cache is keyed by the resource's `id`, we'll need to update it with the new entry.
+
+For this, we'll
+
+- create the resource on the server
+- read out the response data and create a `resourceKey` based on the entry's `id`
+- write the data to the cache instance
+
+```ts
+export async function createPost(payload: Post): Promise<Post> {
+  const response = await fetch(url, {
+    method: "POST",
+    body: JSON.stringify(payload),
+    headers: { "content-type": "application/json" }
+  });
+  const data = await response.json();
+  const resourceKey = `${url}/${data.id}`;
+  cache.set(resourceKey, data);
+  return data;
+}
+```
+::: tip About related data
+When changing data in the cache, related entries of a cache resource will be updated as well, see [Automatic cache updates](#automatic-cache-updates). In this case, when you create a new post, Qache will try to update all cached post collections.
+:::
+
 ## Automatic cache updates
 
 ### An example case
@@ -155,6 +323,10 @@ async function update(contact: Contact): Promise<Contact> {
   return contact;
 }
 ```
+
+### Disable automated cache updates
+
+There might be cases in which you won't want to update related entries.
 
 ### The final result
 

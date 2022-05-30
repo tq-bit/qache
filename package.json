@@ -29,6 +29,7 @@
   },
   "author": "tobi@q-bit.me",
   "license": "MIT",
+  "homepage": "https://tq-bit.github.io/qache/",
   "devDependencies": {
     "@istanbuljs/nyc-config-typescript": "^1.0.2",
     "@types/chai": "^4.3.1",
