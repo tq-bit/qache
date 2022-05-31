@@ -44,30 +44,6 @@ describe('Cache class', () => {
       expect(cache.get(urlUserOne)).to.be.undefined;
     });
 
-    it('Should add a related cache entry if a new, single entry is added', () => {
-      const cache = new Cache(options);
-      cache.set(urlUsers, [...payloadUsers]);
-      cache.set(urlUserThree, { ...payloadUserThree });
-      expect(cache.get(urlUsers)).to.deep.include(payloadUserThree);
-    });
-
-    it('Should update related cache entries if a single entry is updated by its key', () => {
-      const cache = new Cache(options);
-      cache.set(urlUserOne, { ...payloadUserOne });
-      cache.set(urlUsers, [...payloadUsers]);
-
-      cache.set(urlUserOne, { ...payloadUserOneUpdated });
-      expect(cache.get(urlUsers)).to.deep.include(payloadUserOneUpdated);
-    });
-
-    it('Should delete a value from a related cache entry if an existing value is delted', () => {
-      const cache = new Cache(options);
-      cache.set(urlUserOne, { ...payloadUserOne });
-      cache.set(urlUsers, [...payloadUsers]);
-      cache.del(urlUserOne);
-      expect(cache.get(urlUsers)).to.not.deep.include(payloadUserOne);
-    });
-
     it('Should delete all entries in the cache and reset schemata when flushed', () => {
       const cache = new Cache(options);
       cache.set(urlUserOne, { ...payloadUserOne });
@@ -85,6 +61,84 @@ describe('Cache class', () => {
       cache.get(urlUserOne);
       cache.del(urlUserOne);
       expect(cache.stats().hits).to.equal(3);
+    });
+  });
+
+  describe('Automatic cache updates', () => {
+    it('Should add a related cache entry if a new, single entry is added', () => {
+      const cache = new Cache(options);
+      cache.set(urlUsers, [...payloadUsers]);
+      cache.set(urlUserThree, { ...payloadUserThree });
+      expect(cache.get(urlUsers)).to.deep.include(payloadUserThree);
+    });
+
+    it('Should update related cache entries if a single entry is updated by its key', () => {
+      const cache = new Cache(options);
+      cache.set(urlUserOne, { ...payloadUserOne });
+      cache.set(urlUsers, [...payloadUsers]);
+
+      cache.set(urlUserOne, { ...payloadUserOneUpdated });
+      expect(cache.get(urlUsers)).to.deep.include(payloadUserOneUpdated);
+    });
+
+    it('Should delete a value from a related cache entry if an existing value is deleted', () => {
+      const cache = new Cache(options);
+      cache.set(urlUserOne, { ...payloadUserOne });
+      cache.set(urlUsers, [...payloadUsers]);
+      cache.del(urlUserOne);
+      expect(cache.get(urlUsers)).to.not.deep.include(payloadUserOne);
+    });
+
+    it('Should not add an item to collections if create is disabled', () => {
+      const cache = new Cache<User>({ ...options, validate: true });
+
+      cache.set(urlUserOne, payloadUserOne);
+      cache.set(urlUsers, [payloadUserTwo, payloadUserThree], {
+        ignoreCreate: true,
+      });
+
+      const cachedUserEntry = cache.get(urlUserOne) as User;
+      const cachedUserList = cache.get(urlUsers) as User[];
+
+      expect(cachedUserEntry).to.deep.equal(payloadUserOne);
+      expect(cachedUserList).to.not.deep.include(cachedUserEntry);
+    });
+
+    it('Should not update a collection if update is disabled', () => {
+      const cache = new Cache<User>({ ...options, validate: true });
+      const newFirstName = 'This update should be ignored!';
+
+      cache.set(urlUsers, [...payloadUsers], { ignoreUpdate: true });
+      cache.set(urlUserOne, {
+        ...payloadUserOne,
+        firstName: newFirstName,
+      });
+      const cachedUserEntry = cache.get(urlUserOne) as User;
+      const cachedUserList = cache.get(urlUsers) as User[];
+      const entryToBeIgnored = cachedUserList.find(
+        (user) => user.id === cachedUserEntry.id,
+      ) as User;
+
+      expect(cachedUserEntry.firstName === newFirstName).to.be.true;
+      expect(entryToBeIgnored.firstName === newFirstName).to.be.false;
+    });
+
+    it('Should not delete from a collection if delete is disabled', () => {
+      const cache = new Cache<User>({ ...options, validate: true });
+
+      cache.set(urlUserOne, payloadUserOne);
+      cache.set(urlUsers, [...payloadUsers], { ignoreDelete: true });
+      cache.del(urlUserOne);
+
+      const cachedUserEntry = cache.get(urlUserOne) as User;
+      const cachedUserList = cache.get(urlUsers) as User[];
+
+      const entryToBeIgnored = cachedUserList.find(
+        (user) => user.id === payloadUserOne.id,
+      ) as User;
+
+      expect(cachedUserEntry).to.be.undefined;
+      expect(entryToBeIgnored).to.deep.equal(payloadUserOne);
     });
   });
 
@@ -134,25 +188,6 @@ describe('Cache class', () => {
       cache.set('invalid-list', [...payloadUsersWithAdditionalProperty]);
       expect(cache.get('invalid')).to.be.undefined;
       expect(cache.get('invalid-list')).to.be.undefined;
-    });
-
-    it('Should not add or update an entry if updates are disabled for this cache entry', () => {
-      const cache = new Cache<User>({ ...options, validate: true });
-      const newFirstName = 'This update should be ignored!';
-
-      cache.set(urlUsers, [...payloadUsers], { ignoreUpdates: true });
-      cache.set(urlUserOne, {
-        ...payloadUserOne,
-        firstName: newFirstName,
-      });
-      const cachedUserEntry = cache.get(urlUserOne) as User;
-      const cachedUserList = cache.get(urlUsers) as User[];
-      const entryToBeIgnored = cachedUserList.find(
-        (user) => user.id === cachedUserEntry.id,
-      ) as User;
-
-      expect(cachedUserEntry.firstName === newFirstName).to.be.true;
-      expect(entryToBeIgnored.firstName === newFirstName).to.be.false;
     });
   });
 });

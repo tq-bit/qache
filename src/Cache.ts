@@ -14,7 +14,9 @@ type CacheDataType =
 
 export interface CacheSetOptions {
   customLifetime?: number;
-  ignoreUpdates?: boolean;
+  ignoreCreate?: boolean;
+  ignoreUpdate?: boolean;
+  ignoreDelete?: boolean;
 }
 
 export interface CacheOptions {
@@ -70,7 +72,9 @@ export default class Cache<T> {
     [key: string]: {
       data: T | T[];
       timeoutKey: ReturnType<typeof setTimeout>;
-      ignoreUpdates: boolean;
+      ignoreCreate?: boolean;
+      ignoreUpdate?: boolean;
+      ignoreDelete?: boolean;
     };
   };
   private validator: Validator<T> | null;
@@ -122,8 +126,16 @@ export default class Cache<T> {
         key,
         options?.customLifetime,
       );
-      const ignoreUpdates = options?.ignoreUpdates ?? false;
-      this.cacheMap[key] = { data: value, timeoutKey, ignoreUpdates };
+      const ignoreCreate = options?.ignoreCreate ?? false;
+      const ignoreUpdate = options?.ignoreUpdate ?? false;
+      const ignoreDelete = options?.ignoreDelete ?? false;
+      this.cacheMap[key] = {
+        data: value,
+        timeoutKey,
+        ignoreCreate,
+        ignoreUpdate,
+        ignoreDelete,
+      };
       if (!Array.isArray(value)) {
         this.updateRelatedCacheEntries(key, value);
       }
@@ -247,9 +259,6 @@ export default class Cache<T> {
   private updateRelatedCacheEntries(key: string, value?: T) {
     for (const cacheMapKey in this.cacheMap) {
       const cacheMapEntry = this.cacheMap[cacheMapKey];
-      if (cacheMapEntry.ignoreUpdates) {
-        return;
-      }
 
       const entryData = cacheMapEntry?.data;
       const cachedEntryIsArray = Array.isArray(entryData);
@@ -265,11 +274,27 @@ export default class Cache<T> {
             return -1;
           }
         });
-        if (!value && indexOfRelevantElement !== -1) {
+        const entryMustBeDeleted =
+          !value &&
+          indexOfRelevantElement !== -1 &&
+          !cacheMapEntry.ignoreDelete;
+
+        const entryMustBeUpdated =
+          !!value &&
+          indexOfRelevantElement !== -1 &&
+          !cacheMapEntry.ignoreUpdate;
+
+        const entryMustBeAdded =
+          !!value &&
+          indexOfRelevantElement === -1 &&
+          !cacheMapEntry.ignoreCreate;
+
+        console.log(entryMustBeDeleted);
+        if (entryMustBeDeleted) {
           entries.splice(indexOfRelevantElement, 1);
-        } else if (!!value && indexOfRelevantElement !== -1) {
+        } else if (entryMustBeUpdated) {
           entries[indexOfRelevantElement] = value;
-        } else {
+        } else if (entryMustBeAdded) {
           entries.push({ ...value } as T);
         }
 
