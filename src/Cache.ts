@@ -289,7 +289,6 @@ export default class Cache<T> {
           indexOfRelevantElement === -1 &&
           !cacheMapEntry.ignoreCreate;
 
-        console.log(entryMustBeDeleted);
         if (entryMustBeDeleted) {
           entries.splice(indexOfRelevantElement, 1);
         } else if (entryMustBeUpdated) {

@@ -339,9 +339,22 @@ async function update(contact: Contact): Promise<Contact> {
 
 ### Disable automated cache updates
 
-There might be cases in which related entries should not be updated. This is also true for our paginated example. **We don't want Qache to add a new entry to *all* cached pages**. Depending on your caching strategy, you can disable automatic updates by setting  `ignoreUpdates` to `true` when setting a new collection entry:
+There might be cases in which related entries should not be updated. This is also true for our paginated example. **We don't want Qache to add a new entry to *all* cached pages**. Depending on your caching strategy, you will want to have more control over what gets updated and what doesn't.
 
-```ts {9}
+There is a configuration object you can pass when `set`ting new entries. It implements `CacheSetOptions`:
+
+```ts
+interface CacheSetOptions {
+  customLifetime?: number;
+  ignoreCreate?: boolean;
+  ignoreUpdate?: boolean;
+  ignoreDelete?: boolean;
+}
+```
+
+Let's try it:
+
+```ts {9-11}
 async function getContactList(page: number, per_page: number): Promise<Contact[]> {
   const url = `/api/contact?page=${page}&per_page=${per_page}`
   const cachedContactList = contactCache.get(url)
@@ -350,7 +363,11 @@ async function getContactList(page: number, per_page: number): Promise<Contact[]
   }
   const response = await fetch();
   const contacts = await response.json();
-  contactCache.set(url, contacts, { ignoreUpdates: true });
+  contactCache.set(url, contacts, {
+    ignoreCreate: true,
+    ignoreUpdates: true,
+    ignoreDelete: true
+  });
   return contacts;
 }
 ```
