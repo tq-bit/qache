@@ -1,7 +1,9 @@
 declare type CacheDataType = 'string' | 'number' | 'bigint' | 'boolean' | 'symbol' | 'undefined' | 'object' | 'function' | 'array' | null;
 export interface CacheSetOptions {
     customLifetime?: number;
-    ignoreUpdates?: boolean;
+    ignoreCreate?: boolean;
+    ignoreUpdate?: boolean;
+    ignoreDelete?: boolean;
 }
 export interface CacheOptions {
     cacheKey?: string;

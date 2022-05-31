@@ -69,10 +69,18 @@ class Cache {
         this.hits++;
         const mustValidate = this.validate;
         const handleSet = () => {
-            var _a;
+            var _a, _b, _c;
             const timeoutKey = this.scheduleEntryDeletion(key, options === null || options === void 0 ? void 0 : options.customLifetime);
-            const ignoreUpdates = (_a = options === null || options === void 0 ? void 0 : options.ignoreUpdates) !== null && _a !== void 0 ? _a : false;
-            this.cacheMap[key] = { data: value, timeoutKey, ignoreUpdates };
+            const ignoreCreate = (_a = options === null || options === void 0 ? void 0 : options.ignoreCreate) !== null && _a !== void 0 ? _a : false;
+            const ignoreUpdate = (_b = options === null || options === void 0 ? void 0 : options.ignoreUpdate) !== null && _b !== void 0 ? _b : false;
+            const ignoreDelete = (_c = options === null || options === void 0 ? void 0 : options.ignoreDelete) !== null && _c !== void 0 ? _c : false;
+            this.cacheMap[key] = {
+                data: value,
+                timeoutKey,
+                ignoreCreate,
+                ignoreUpdate,
+                ignoreDelete,
+            };
             if (!Array.isArray(value)) {
                 this.updateRelatedCacheEntries(key, value);
             }
@@ -192,9 +200,6 @@ class Cache {
     updateRelatedCacheEntries(key, value) {
         for (const cacheMapKey in this.cacheMap) {
             const cacheMapEntry = this.cacheMap[cacheMapKey];
-            if (cacheMapEntry.ignoreUpdates) {
-                return;
-            }
             const entryData = cacheMapEntry === null || cacheMapEntry === void 0 ? void 0 : cacheMapEntry.data;
             const cachedEntryIsArray = Array.isArray(entryData);
             if (cachedEntryIsArray) {
@@ -207,13 +212,22 @@ class Cache {
                         return -1;
                     }
                 });
-                if (!value && indexOfRelevantElement !== -1) {
+                const entryMustBeDeleted = !value &&
+                    indexOfRelevantElement !== -1 &&
+                    !cacheMapEntry.ignoreDelete;
+                const entryMustBeUpdated = !!value &&
+                    indexOfRelevantElement !== -1 &&
+                    !cacheMapEntry.ignoreUpdate;
+                const entryMustBeAdded = !!value &&
+                    indexOfRelevantElement === -1 &&
+                    !cacheMapEntry.ignoreCreate;
+                if (entryMustBeDeleted) {
                     entries.splice(indexOfRelevantElement, 1);
                 }
-                else if (!!value && indexOfRelevantElement !== -1) {
+                else if (entryMustBeUpdated) {
                     entries[indexOfRelevantElement] = value;
                 }
-                else {
+                else if (entryMustBeAdded) {
                     entries.push(Object.assign({}, value));
                 }
                 this.cacheMap[cacheMapKey] = Object.assign(Object.assign({}, this.cacheMap[cacheMapKey]), { data: [...entries] });
